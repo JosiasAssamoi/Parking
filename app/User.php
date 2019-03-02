@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email','adresse','city','postal_code', 'password',
     ];
 
     /**
@@ -27,4 +27,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+    * les places qui appartiennent à un user
+    */
+
+    public function places(){
+
+        return $this->belongsToMany('Place')->withPivot('date','duree');
+    }
+
 }
