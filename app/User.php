@@ -25,7 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token','rules'
     ];
 
     /**
@@ -34,7 +34,20 @@ class User extends Authenticatable
 
     public function places(){
 
-        return $this->belongsToMany('Place')->withPivot('date','duree');
+        return $this->belongsToMany('\App\Place')->withPivot('date','duree');
     }
+
+
+    /**
+    * les demandes d'un user
+    */
+
+    public function place_requests(){
+
+        return $this->hasMany('\App\PlaceRequest');
+    }
+
+
+
 
 }

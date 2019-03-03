@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('postal_code');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('rules')->default('utilisateur');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

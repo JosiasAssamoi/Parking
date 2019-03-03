@@ -33,3 +33,12 @@ $factory->define(App\Place::class, function (Faker $faker) {
        
     ];
 });
+
+$factory->define(App\PlaceRequest::class, function (Faker $faker) {
+    return [
+
+    ];
+});
+
+
+
