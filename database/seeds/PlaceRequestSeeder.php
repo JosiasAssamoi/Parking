@@ -15,3 +15,4 @@ class PlaceRequestSeeder extends Seeder
         $user->place_requests()->save(factory(App\PlaceRequest::class)->make());});
 	}
 }
+
