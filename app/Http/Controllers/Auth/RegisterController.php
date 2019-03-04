@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Response;
 
 class RegisterController extends Controller
 {
@@ -78,4 +81,35 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
     }
+
+
+
+    //Ovveride pour ne plus connecter directement connecter le nouvel inscrit 
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+
+
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+        
+        /*Lors de l'enregistrement l'admin doit valider donc on ne le connecte pas! o
+        On le redirigere avec un message*/
+       
+       // $this->guard()->login($user);
+
+        //On lui renvoi donc seulement un message
+        $request->session()->put('registering_request', 'Votre demande a été soumise à validation'); 
+     
+        return $this->registered($request, $user)
+                        ?: redirect($this->redirectPath());
+    }
+
 }

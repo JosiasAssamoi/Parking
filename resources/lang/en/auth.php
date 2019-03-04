@@ -13,7 +13,8 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'Identifiant ou mot de passe incorrect veuillez retenter',
+    'throttle' => "Trop d'essais infructeux re-essayez dans  :seconds secondes.",
+    'tovalid' => "Votre compte n'a pas encore été validé par l'administrateur  ",
 
 ];

@@ -29,7 +29,7 @@ $factory->define(App\User::class, function (Faker $faker) {
 
 $factory->define(App\Place::class, function (Faker $faker) {
     return [
-        'dispo' => rand(0,1),
+        'dispo' => 1,
        
     ];
 });
