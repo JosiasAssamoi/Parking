@@ -71,9 +71,12 @@ class LoginController extends Controller
 
         // Si l'user existe mais quil n'est pas validé par ladmin on return un message derreur qui est dans (ressources/lang/en/auth.php)
         if($user){
+
             if ($user->tovalid === 1) {
                 return $this->sendFailedLoginResponse($request, 'auth.tovalid');
             }
+            if($user->rules==='admin')
+                $this->redirectTo=route('admin-home');
         }
 
 

@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header text-center">Tableau de bord</div>
+                <div class="card-header">Dashboard</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -13,10 +13,8 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    <div class="wrapper text-center">
-                   <a href="{{route('place-request')}}" class="btn btn-outline-secondary" role="button">Reserver une place</a>
-                   <a href="{{route('edit-profil')}}" class="btn btn-outline-secondary" role="button">Editer votre profil</a>
-               </div>
+
+                    You are logged in as an Admin!
                 </div>
             </div>
         </div>
