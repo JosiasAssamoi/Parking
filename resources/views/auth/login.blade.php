@@ -8,14 +8,17 @@
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
+                    @if(Session::has('registering_request'))
+
+                    <div class="alert alert-success text-center" role="alert">
+                          {{Session::get('registering_request')}}
+                          {{Session::forget('registering_request')}}
+                    </div>
+                      
+                    @endif
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
-                        @if(Session::has('registering_request'))
-                            <div class="alert alert-success">
-                            {{ Session::get('registering_request')}}
-                            <?php Session::forget('registering_request'); ?>
-                            </div>
-                        @endif
+
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 

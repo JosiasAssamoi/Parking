@@ -31,7 +31,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/user';
 
     /**
      * Create a new controller instance.
@@ -57,9 +57,9 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:191', 'unique:users'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
-            'adress' => ['required', 'string', 'max:191'],
+            'adresse' => ['required', 'string', 'max:191'],
             'city' => ['required', 'string', 'max:191'],
-            'postalcode' => ['required' , 'max:5'],
+            'postal_code' => ['required' , 'max:5'],
         ]);
     }
 
@@ -74,9 +74,9 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'firstname' => $data['firstname'],
-            'adresse' => $data['adress'],
+            'adresse' => $data['adresse'],
             'city' => $data['city'],
-            'postal_code' => $data['postalcode'],
+            'postal_code' => $data['postal_code'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
