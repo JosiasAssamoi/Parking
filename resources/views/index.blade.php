@@ -15,8 +15,11 @@
                     @endif
                     <div class="wrapper text-center">
 
-                   <a href="" class="btn btn-outline-secondary" role="button">Reserver une place</a>
-                   <a href="{{ route('user.edit',['user'=> Auth::user()] ) }}" class="btn btn-outline-secondary" role="button">Editer votre profil</a>
+                   
+
+                   <a href="" class="btn btn-outline-secondary my-1" role="button">Reserver une place</a>
+                   <a href="{{route('user.show',Auth::user())}}" class="btn btn-outline-secondary my-1" role="button">Voir mes places</a>
+                   <a href="{{ route('user.edit',['user'=> Auth::user()] ) }}" class="btn btn-outline-secondary my-1" role="button">Editer votre profil</a>
                </div>
                 </div>
             </div>

@@ -15,7 +15,7 @@ class UserSafer
      */
     public function handle($request, Closure $next)
     {
-        //si l'id de la requete est différent de l'id de l'user en ligne on le redirige
+        //si l'id de la requete(nom du parametre de la route donc la c'est user) est différent de l'id de l'user en ligne on le redirige
           if ($request->user){
            // dd($request->user);
               if($request->user->id != Auth::id()) {

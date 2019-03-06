@@ -32,6 +32,8 @@ class User extends Authenticatable  implements CanResetPasswordContract
         'password', 'remember_token','rules'
     ];
 
+    protected $current_places=[];
+
     /**
     * les places qui appartiennent à un user
     */
@@ -51,7 +53,25 @@ class User extends Authenticatable  implements CanResetPasswordContract
         return $this->hasMany('\App\PlaceRequest');
     }
 
+     /**
+     * Les places actuelles de l'user
+     *
+     * @var $places
+     * @return array
+     */
 
+     public function getCurrrentPlaces($places){
+        foreach($places as $place)
+        {
+            // calcul de la date de fin de reservation de la place
+            $finishdate = strtotime($place->pivot->date . '+'.$place->pivot->duree." days");
+            // si le timestamps actuel est inferrieur a celui de la date de fin
+            if(time() < $finishdate){
+                $this->current_places[]=$place;}
+        }
 
+        return $this->current_places;
+
+    }
 
 }

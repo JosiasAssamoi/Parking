@@ -28,7 +28,7 @@ Route::post('user/{user}/change-pass', 'UserController@change_pass')->name('chan
 
 //crée les ressources du user controller avec les fonctions liées 
 Route::resource('user','UserController')->only([
-    'index','edit','update'
+    'index','show','edit','update'
 ]);
 
 //Admin routes => il faudra creer des ressources
