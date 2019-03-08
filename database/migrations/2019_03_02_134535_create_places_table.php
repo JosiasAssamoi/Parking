@@ -18,14 +18,8 @@ class CreatePlacesTable extends Migration
             $table->boolean('dispo');
         });
 
-        //table pivot ou avec cle primaire composée de 3 id dont la date pour remplacer la ternaire avec la table date
-        Schema::create('place_user', function (Blueprint $table){
-            $table->integer('place_id')->unsigned();
-            $table->integer('user_id')->unsigned();
-            $table->timestamp('date');
-            $table->integer('duree')->unsigned()->default(2);
-            $table->primary(['place_id','user_id','date']);
-        });
+
+      
     }
 
     /**
@@ -35,7 +29,7 @@ class CreatePlacesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('place_user');
+       
         Schema::dropIfExists('places');
     }
 }

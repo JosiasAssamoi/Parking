@@ -27,18 +27,5 @@ $factory->define(App\User::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(App\Place::class, function (Faker $faker) {
-    return [
-        'dispo' => 1,
-       
-    ];
-});
-
-$factory->define(App\PlaceRequest::class, function (Faker $faker) {
-    return [
-
-    ];
-});
-
 
 

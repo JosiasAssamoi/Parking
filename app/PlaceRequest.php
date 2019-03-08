@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PlaceRequest extends Model
 {
-     protected $fillable = ['etat','rang'];
+     protected $fillable = ['etat','rang','user_id'];
   public $timestamps = false;
 
     /**
