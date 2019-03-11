@@ -25,8 +25,9 @@ class CreateUsersTable extends Migration
             //utilisateur ou admin
             $table->string('rules')->default('utilisateur');
             $table->string('password');
-            //0 = ok, 1 = to valid,  
+            //0 = ok, 1 = to valid,
             $table->tinyInteger('tovalid')->default(1);
+            $table->integer('rang')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -39,6 +40,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('reservations');
     }
 }

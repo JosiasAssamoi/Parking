@@ -14,10 +14,9 @@ class Place extends Model
     * les utilisateurs qui ont possedé cette place
     */
 
-    public function users(){
-    	// si le champ deleted_at est null c'est qu'il n'ya  pas eu de suppression
-        return $this->belongsToMany('User')->withPivot('date','duree','deleted_at');
-        // return $this->belongsTo('User');
+    public function reservations(){
+    	// une place a plusieurs reservations
+        return $this->HasMany('\App\Reservation');
     }
 
 

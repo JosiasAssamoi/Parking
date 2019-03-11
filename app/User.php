@@ -19,7 +19,7 @@ class User extends Authenticatable  implements CanResetPasswordContract
      * @var array
      */
     protected $fillable = [
-        'name','firstname', 'email','adresse','city','postal_code', 'password',
+        'name','firstname', 'email','adresse','city','postal_code', 'password','rang'
     ];
 
     /**
@@ -42,15 +42,13 @@ class User extends Authenticatable  implements CanResetPasswordContract
         return $this->belongsToMany('\App\Place')->withPivot('date','duree','deleted_at');
     }
 
-
-    /**
-    * les demandes d'un user
-    */
-
-    public function place_requests(){
-
-        return $this->hasMany('\App\PlaceRequest');
+    // un User peut avoir plusieurs reservations
+    public function reservations(){
+        return $this->HasMany('\App\Reservation');
     }
+
+
+
 
      /**
      * Les places actuelles de l'user
@@ -59,6 +57,8 @@ class User extends Authenticatable  implements CanResetPasswordContract
      * @return array
      */
 
+// A REFAIRE
+/*
      public function getCurrrentPlaces($places){
         foreach($places as $place)
         {
@@ -74,6 +74,6 @@ class User extends Authenticatable  implements CanResetPasswordContract
 
         return $this->current_places;
 
-    }
+    }*/
 
 }
