@@ -16,7 +16,7 @@ class Place extends Model
 
     public function reservations(){
     	// une place a plusieurs reservations
-        return $this->HasMany('\App\Reservation');
+        return $this->hasMany('\App\Reservation');
     }
 
 

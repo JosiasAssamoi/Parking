@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reservation extends Model
 {
-    protected $fillable= ['date_debut'];
+    protected $fillable= ['date_debut','user_id','place_id'];
     public $timestamps = false;
 
 // une reservation concerne un user

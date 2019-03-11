@@ -44,7 +44,7 @@ class User extends Authenticatable  implements CanResetPasswordContract
 
     // un User peut avoir plusieurs reservations
     public function reservations(){
-        return $this->HasMany('\App\Reservation');
+        return $this->hasMany('\App\Reservation');
     }
 
 
