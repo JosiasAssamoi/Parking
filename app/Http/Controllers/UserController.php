@@ -10,7 +10,7 @@ use App\Http\Requests\EditUserFormRequest;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Place;
-use App\PlaceRequest;
+use App\Reservation;
 
 class UserController extends Controller
 {
@@ -36,7 +36,10 @@ class UserController extends Controller
 
     public function index()
     {
-        $AlreadyRequested=PlaceRequest::where('user_id',Auth::user()->id)->where('etat',0)->first();
+       
+        // renvoi la valeur du rang de l'user actif
+        $user= Auth::user();
+        $AlreadyRequested=$user->rang;
         return view('index',compact('AlreadyRequested'));
     }
 
@@ -49,7 +52,7 @@ class UserController extends Controller
     public function show(User $user)
     {
        // On recupere les places que l'utilisateur possede en ce moment
-      $current_places=$user->getCurrrentPlaces($user->places);
+      $current_places=$user->getCurrrentPlaces(Reservation::where('user_id',$user->id)->where('is_cancelled',false)->get());
 
       return view('show',compact('user','current_places'));
     }
@@ -116,10 +119,10 @@ class UserController extends Controller
    public function place_request(User $user){
 
     $request_response=[];
-    $AlreadyRequested='';
+    $AlreadyRequested=$user->rang;
 
     //si il a deja une place en ce moment error
-    if(!empty($user->getCurrrentPlaces($user->places))){
+    if(!empty($user->getCurrrentPlaces(Reservation::where('user_id',$user->id)->where('is_cancelled',false)->get()))){
         $request_response['msg']='Vous avez deja une place en ce moment attendez la fin de votre reservation avant de reiterer une demande' ;
         $request_response['status']='danger';
     }
@@ -130,25 +133,29 @@ class UserController extends Controller
         //si on n'en trouve pas liste d'attente
         if(empty($place)){
           // Check si il n'a pas deja une demande en attente
-          $AlreadyRequested=PlaceRequest::where('user_id',$user->id)->where('etat',0)->first();
-          if (!$AlreadyRequested){
-              $max_rang= PlaceRequest::max('rang');
-              PlaceRequest::create(['user_id'=>$user->id, 'rang'=> empty($max_rang) ? 1 : ($max_rang+1) ]);
+          if (empty($AlreadyRequested)){
+              $max_rang= User::max('rang');
+              // si il n'y a pas de max rang c'est qu'il est le premier sinon il prend la derniere place
+              $user->rang= empty($max_rang) ? 1 : ($max_rang+1) ;
+              $user->save();
               $request_response['msg']="Votre demande a été soumise, vous serez informé lors de son traitement";
               $request_response['status']='success';
-          }else{
-              $request_response['msg']='Vous avez deja une demande en attente effectuée le '.dates_to_french($AlreadyRequested->date_demande) ;
+          }
+
+          else{
+              $request_response['msg']='Vous avez deja  effectuée une demande' ;
               $request_response['status']='danger';
-        }
+          }
         }
         //si une place est dispo
         else{
-            //on attache la place a l'user dans la table pivot
-            $user->places()->attach($place->id);
-            // mieux mais ne fonctionne pas . ..$place->refresh()
-            $newplace=$user = \DB::table('place_user')->where('place_id', $place->id)->first();
-            $request_response['msg']="la place n° : ".$newplace->place_id." vous a été attribué "."pour une durée de ".$newplace->duree." jours (plus de détails dans l'onglet voir mes places";
+            //on attache a l'user la place  dans la table reservations
+            $user->reservations()->create(['place_id'=>$place->id]);
+
+            $newplace=Reservation::where('place_id', $place->id)->first();
+            $request_response['msg']="la place n° : ".$newplace->place_id." vous a été attribué "."pour une durée de ".$newplace->duree." jours (plus de détails dans l'onglet => \"Voir mes places\" ";
             $request_response['status']='success';
+            // on enleve la disponibilité de la place
             $place->dispo=0;
             $place->save();
 
@@ -163,14 +170,17 @@ class UserController extends Controller
 
 
    public function delete_place(Place $place) {
-     //suppression logique dans la table pivot user_place
-    \DB::table('place_user')
-    ->where('user_id', Auth::user()->id)
-    ->where('place_id', $place->id)
-    ->update(array('deleted_at' => \DB::raw('NOW()')));
+     //suppression logique dans la table reservation
+    $user=Auth::user();
+  //  dump($user->id);
+    //dd($place->id);
+    $user->reservations()->where('place_id',$place->id)->update(['is_cancelled'=> true]);
+
     // set dispo de la place
     $place->dispo=1;
     $place->save();
+
+    // response
     $request_response['msg']='Vous venez de supprimer votre reservation !' ;
     $request_response['status']='success';
 

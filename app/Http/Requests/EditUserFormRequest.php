@@ -33,8 +33,8 @@ class EditUserFormRequest extends FormRequest
         return [
             'name' => 'required|string|max:191',
             'firstname' => 'required|string|max:191',
-            // on precise que l'email doit etre unique si on le change mais on l'ignore si il reste inchangé
-             'email' => ['required','email',Rule::unique('users')->ignore($this->user)],
+          /*  // on precise que l'email doit etre unique si on le change mais on l'ignore si il reste inchangé
+             'email' => ['required','email',Rule::unique('users')->ignore($this->user)],*/
             'adresse' => 'required|string|max:191',
             'city' => 'required|string|max:191',
             'postal_code' => 'required|max:5',

@@ -26,7 +26,7 @@
                       <p>Vous n'avez aucune demande de reservation en attente </p>
 
                    @elseif(!isset($request_response))
-                      <p  class="alert alert-info" >Vous avez une demande en attente de validation effectuée le {{dates_to_french($AlreadyRequested->date_demande)}} </p>
+                      <p  class="alert alert-info" >Vous avez une demande en attente de validation </p>
 
                    @endif
                    @if(empty($AlreadyRequested) || !empty($current_places) )

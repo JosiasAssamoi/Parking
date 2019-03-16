@@ -9,14 +9,14 @@
 
                   <div class="card-body">
                       <div class="wrapper">
-                          @if($user->places)
+                          @if($user->reservations)
                             <ul class="list-group text-center ">
                           @endif
                           @isset($current_places)
                             @foreach ($current_places as $current_place)
                                   <li  class="list-group-item d-flex justify-content-between align-items-center bg-info">
-                                    Place n° {{$current_place->id}} du  {{dates_to_french($current_place->pivot->date)}} au {{finish_date($current_place->pivot->date,$current_place->pivot->duree)}} (Vous possedez actuellement cette place) 
-                                    <form action ="{{route('user.delete.place',$current_place->id)}}" method=POST>
+                                    Place n° {{$current_place->place_id}} du  {{dates_to_french($current_place->date_debut)}} au {{finish_date($current_place->date_debut,$current_place->duree)}} (Vous possedez actuellement cette place) 
+                                    <form action ="{{route('user.delete.place',$current_place->place_id)}}" method=POST>
                                  @csrf
                                  {{method_field('DELETE')}}
                                 <input  type="submit" class="btn  btn-sm btn-secondary"  onclick="return confirm('Êtes-vous sûr de vouloir annuler cette reservation ?');" value="Annuler"/>
@@ -28,13 +28,13 @@
                             @endforeach
                           @endisset
 
-                          @forelse($user->places as $place)
+                          @forelse($user->reservations as $place)
                             @if (!in_array($place,$current_places))
-                              <li  class="list-group-item  ">Place n° {{$place->id}} du  {{dates_to_french($place->pivot->date)}} au
-                                  {{finish_date($place->pivot->date,$place->pivot->duree)}} ({{$place->pivot->duree}} jours) 
-                                  @if(!empty($place->pivot->deleted_at)) 
-                                   <p class ="text-danger text-center">(demande annulée le : {{dates_to_french($place->pivot->deleted_at)}}
-                                   )</p>
+                              <li  class="list-group-item  ">Place n° {{$place->id}} du  {{dates_to_french($place->date_debut)}} au
+                                  {{finish_date($place->date_debut,$place->duree)}} ({{$place->duree}} jours) 
+                                  @if($place->is_cancelled)) 
+                                   <p class ="text-danger text-center">(Demande annulée)
+                                   </p>
                                   @endif
                               </li><br>
                             @endif
@@ -51,7 +51,7 @@
 
                         
                           @endforelse
-                          @if($user->places)
+                          @if($user->reservations)
                             </ul>
                           @endif
                       </div>
