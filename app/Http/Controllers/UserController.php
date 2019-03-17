@@ -36,11 +36,13 @@ class UserController extends Controller
 
     public function index()
     {
-       
         // renvoi la valeur du rang de l'user actif
         $user= Auth::user();
         $AlreadyRequested=$user->rang;
-        return view('index',compact('AlreadyRequested'));
+        // places actuelles
+        $current_places=$user->getCurrrentPlaces(Reservation::where('user_id',$user->id)->where('is_cancelled',false)->get());
+        // ce serait interessant de lancer un evenement a chaque fois que la page est raffraichie pour les user en attente
+        return view('index',compact('AlreadyRequested','current_places'));
     }
 
 
@@ -117,52 +119,51 @@ class UserController extends Controller
 
    // du gros pathé qui fonctionne mais a refactorer !!
    public function place_request(User $user){
+       $request_response=[];
+       $AlreadyRequested=$user->rang;
+       $current_places=$user->getCurrrentPlaces(Reservation::where('user_id',$user->id)->where('is_cancelled',false)->get());
 
-    $request_response=[];
-    $AlreadyRequested=$user->rang;
 
-    //si il a deja une place en ce moment error
-    if(!empty($user->getCurrrentPlaces(Reservation::where('user_id',$user->id)->where('is_cancelled',false)->get()))){
-        $request_response['msg']='Vous avez deja une place en ce moment attendez la fin de votre reservation avant de reiterer une demande' ;
-        $request_response['status']='danger';
-    }
-    else{
-
-        // on cherche une place dispo de maniere aleatoire
-        $place=Place::where('dispo',1)->orderByRaw("RAND()")->first();
-        //si on n'en trouve pas liste d'attente
-        if(empty($place)){
-          // Check si il n'a pas deja une demande en attente
-          if (empty($AlreadyRequested)){
-              $max_rang= User::max('rang');
-              // si il n'y a pas de max rang c'est qu'il est le premier sinon il prend la derniere place
-              $user->rang= empty($max_rang) ? 1 : ($max_rang+1) ;
-              $user->save();
-              $request_response['msg']="Votre demande a été soumise, vous serez informé lors de son traitement";
-              $request_response['status']='success';
-          }
-
-          else{
-              $request_response['msg']='Vous avez deja  effectuée une demande' ;
-              $request_response['status']='danger';
-          }
+        //si il a deja une place en ce moment error
+        if(!empty($current_places)){
+            $request_response['msg']='Vous avez deja une place en ce moment attendez la fin de votre reservation avant de reiterer une demande' ;
+            $request_response['status']='danger';
         }
-        //si une place est dispo
+        //il n'a pas de place
         else{
-            //on attache a l'user la place  dans la table reservations
-            $user->reservations()->create(['place_id'=>$place->id]);
-
-            $newplace=Reservation::where('place_id', $place->id)->first();
-            $request_response['msg']="la place n° : ".$newplace->place_id." vous a été attribué "."pour une durée de ".$newplace->duree." jours (plus de détails dans l'onglet => \"Voir mes places\" ";
-            $request_response['status']='success';
-            // on enleve la disponibilité de la place
-            $place->dispo=0;
-            $place->save();
-
-          }
+            // on cherche une place dispo de maniere aleatoire
+            $place=Place::where('dispo',1)->orderByRaw("RAND()")->first();
+             // On regarde si il a deja fait une demande
+            if(!empty($AlreadyRequested)){
+                $request_response['msg']='Vous avez deja  effectuée une demande, elle sera traitée des qu\'une place se liberera' ;
+                $request_response['status']='danger';
+            }
+            // il n'a pas fait de demande
+            // si il y a deja une queue et que l'user n'y est pas encore il doit prendre la derniere place OU si il n' y a pas de place dispo
+            elseif( User::max('rang')!=null || empty($place) ){
+                 $user->rang= empty(User::max('rang')) ? 1 : (User::max('rang')+1) ;
+                 $user->save();
+                 $request_response['msg']="Votre demande a été soumise, vous serez informé lors de son traitement";
+                 $request_response['status']='success';
+                 $AlreadyRequested=$user->rang;
+            }
+            // il n'a pas de place && personne n'est avant lui && et il n'a pas deja une demande en attente  && une place est dispo
+            else{
+                //on attache a l'user la place  dans la table reservations
+                $user->reservations()->create(['place_id'=>$place->id]);
+                // on recupe cette nouvelle place 
+                $newplace=$user->reservations()->where('place_id', $place->id)->orderBy('date_debut','desc')->first();
+                $current_places=$newplace;
+                $request_response['msg']="la place n° : ".$newplace->place_id." vous a été attribué "."pour une durée de ".$newplace->duree." jours (plus de détails dans l'onglet => \"Voir mes places\" ";
+                $request_response['status']='success';
+                // on enleve la disponibilité de la place
+                $place->dispo=0;
+                $place->save();    
+            }
         }
+
         //  return response()->view('index',compact('user','request_response','AlreadyRequested'))->header("Refresh","5;url=/user");
-        return view('index',compact('user','request_response','AlreadyRequested'));
+        return view('index',compact('user','request_response','AlreadyRequested','current_places'));
   }
 
 
