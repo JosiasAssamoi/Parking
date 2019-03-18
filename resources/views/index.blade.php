@@ -31,9 +31,9 @@
                       <p  class="alert alert-info" >Vous avez une demande en attente de validation et vous êtes au rang n° {{Auth::user()->rang}} </p>
 
                    @endif
-                    
-                   @if(empty($AlreadyRequested) && empty($current_places))
-                  
+
+                   @if(empty($AlreadyRequested) && empty($current_place))
+
 
                      <form action ="{{route('user.request',Auth::user())}}" method=POST>
                         @csrf

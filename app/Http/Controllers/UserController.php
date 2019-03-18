@@ -40,9 +40,11 @@ class UserController extends Controller
         $user= Auth::user();
         $AlreadyRequested=$user->rang;
         // places actuelles
-        $current_places=$user->getCurrrentPlaces(Reservation::where('user_id',$user->id)->where('is_cancelled',false)->get());
+        $current_place=$user->getCurrrentPlace();
+
+
         // ce serait interessant de lancer un evenement a chaque fois que la page est raffraichie pour les user en attente
-        return view('index',compact('AlreadyRequested','current_places'));
+        return view('index',compact('AlreadyRequested','current_place'));
     }
 
 
@@ -54,9 +56,12 @@ class UserController extends Controller
     public function show(User $user)
     {
        // On recupere les places que l'utilisateur possede en ce moment
-      $current_places=$user->getCurrrentPlaces(Reservation::where('user_id',$user->id)->where('is_cancelled',false)->get());
+      $current_place=$user->getCurrrentPlace();
+      $all_places= Reservation::MyHistoric();
 
-      return view('show',compact('user','current_places'));
+
+
+      return view('show',compact('user','current_place','all_places'));
     }
 
 
@@ -121,11 +126,11 @@ class UserController extends Controller
    public function place_request(User $user){
        $request_response=[];
        $AlreadyRequested=$user->rang;
-       $current_places=$user->getCurrrentPlaces(Reservation::where('user_id',$user->id)->where('is_cancelled',false)->get());
+       $current_place=$user->getCurrrentPlace();
 
 
         //si il a deja une place en ce moment error
-        if(!empty($current_places)){
+        if(!empty($current_place)){
             $request_response['msg']='Vous avez deja une place en ce moment attendez la fin de votre reservation avant de reiterer une demande' ;
             $request_response['status']='danger';
         }
@@ -133,6 +138,7 @@ class UserController extends Controller
         else{
             // on cherche une place dispo de maniere aleatoire
             $place=Place::where('dispo',1)->orderByRaw("RAND()")->first();
+          //$place=Place::FreePlaces();
              // On regarde si il a deja fait une demande
             if(!empty($AlreadyRequested)){
                 $request_response['msg']='Vous avez deja  effectuée une demande, elle sera traitée des qu\'une place se liberera' ;
@@ -151,19 +157,16 @@ class UserController extends Controller
             else{
                 //on attache a l'user la place  dans la table reservations
                 $user->reservations()->create(['place_id'=>$place->id]);
-                // on recupe cette nouvelle place 
+                // on recupe cette nouvelle place
                 $newplace=$user->reservations()->where('place_id', $place->id)->orderBy('date_debut','desc')->first();
-                $current_places=$newplace;
+                $current_place=$newplace;
                 $request_response['msg']="la place n° : ".$newplace->place_id." vous a été attribué "."pour une durée de ".$newplace->duree." jours (plus de détails dans l'onglet => \"Voir mes places\" ";
                 $request_response['status']='success';
-                // on enleve la disponibilité de la place
-                $place->dispo=0;
-                $place->save();    
             }
         }
 
         //  return response()->view('index',compact('user','request_response','AlreadyRequested'))->header("Refresh","5;url=/user");
-        return view('index',compact('user','request_response','AlreadyRequested','current_places'));
+        return view('index',compact('user','request_response','AlreadyRequested','current_place'));
   }
 
 
@@ -175,7 +178,9 @@ class UserController extends Controller
     $user=Auth::user();
   //  dump($user->id);
     //dd($place->id);
-    $user->reservations()->where('place_id',$place->id)->update(['is_cancelled'=> true]);
+
+    // quand on delete une place on set la date de fin a aujourd'hui
+    $user->reservations()->where('place_id',$place->id)->update(['date_fin'=>now()]);
 
     // set dispo de la place
     $place->dispo=1;

@@ -20,11 +20,10 @@ class CreateReservationTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('place_id')->references('id')->on('places')->onDelete('cascade');
-            $table->timestamp('date_debut')->default(DB::raw('CURRENT_TIMESTAMP'));;
-            $table->smallInteger('duree')->default(2);
-            //pour gere si une resa est annuléee ou pas 
-            $table->boolean('is_cancelled')->default(false);
-            ; 
+            $table->timestamp('date_debut')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('date_fin')->nullable();
+
+
 
         });
 

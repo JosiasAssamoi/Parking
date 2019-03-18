@@ -12,12 +12,3 @@
 	        return $place;
 		}
 	}
-
-
-	if(!function_exists('finish_date')){
-		function finish_date($place,$duree){
-	     $place = new Carbon($place);
-	     $place = $place->addDays($duree);
-	        return dates_to_french($place);
-		}
-	}

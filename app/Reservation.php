@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reservation extends Model
 {
-    protected $fillable= ['date_debut','user_id','place_id'];
+    protected $fillable= ['user_id','place_id'];
     public $timestamps = false;
 
 // une reservation concerne un user
@@ -18,4 +18,11 @@ class Reservation extends Model
 
         return $this->belongsTo('\App\Place');
     }
+
+    // to do les places actuelles
+    public function scopeMyHistoric(){
+
+      return $this->get();
+    }
+
 }

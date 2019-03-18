@@ -20,4 +20,10 @@ class Place extends Model
     }
 
 
+		public function scopeFreePlaces(){
+
+			dd($this->reservations);
+		}
+
+
 }

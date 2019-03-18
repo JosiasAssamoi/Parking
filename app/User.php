@@ -19,7 +19,7 @@ class User extends Authenticatable  implements CanResetPasswordContract
      * @var array
      */
     protected $fillable = [
-        'name','firstname', 'email','adresse','city','postal_code', 'password','rang'
+        'name','firstname', 'email','adresse','city','postal_code', 'password',
     ];
 
     /**
@@ -31,7 +31,6 @@ class User extends Authenticatable  implements CanResetPasswordContract
         'password', 'remember_token','rules'
     ];
 
-    protected $current_places=[];
 
 
 
@@ -51,20 +50,27 @@ class User extends Authenticatable  implements CanResetPasswordContract
      * @return array
      */
 
-// A REFAIRE
 
-     public function getCurrrentPlaces($places){
-        foreach($places as $place)
-        {
+//  A ADMIRER
+
+     public function getCurrrentPlace(){
+
+       return $this->reservations()->where('date_fin' ,'>',now())->first();
+
+      }
+
+
+
+      /* {
                 // calcul de la date de fin de reservation de la place
                 $finishdate = strtotime($place->date_debut . '+'.$place->duree." days");
                 // si le timestamps actuel est inferieur a celui de la date de fin
                 if(time() < $finishdate){
-                    $this->current_places[]=$place;}
+                    $this->current_place[]=$place;}
             }
 
-        return $this->current_places;
+        return $this->current_place;
 
-    }
+    }*/
 
 }
