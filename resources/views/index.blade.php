@@ -32,7 +32,7 @@
 
                    @endif
                     
-                   @if(empty($AlreadyRequested) && empty($current_places) || empty($current_places) )
+                   @if(empty($AlreadyRequested) && empty($current_places))
                   
 
                      <form action ="{{route('user.request',Auth::user())}}" method=POST>

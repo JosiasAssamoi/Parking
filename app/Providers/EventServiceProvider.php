@@ -20,7 +20,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'Illuminate\Auth\Events\Login' => [
             'App\Listeners\PlaceRequestListener',
+            'App\Listeners\CheckEndResaListener',
         ],
+      
 
     ];
 

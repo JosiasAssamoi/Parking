@@ -30,10 +30,10 @@
 
                           @forelse($user->reservations as $place)
                             @if (!in_array($place,$current_places))
-                              <li  class="list-group-item  ">Place n° {{$place->id}} du  {{dates_to_french($place->date_debut)}} au
+                              <li  class="list-group-item  ">Place n° {{$place->place_id}} du  {{dates_to_french($place->date_debut)}} au
                                   {{finish_date($place->date_debut,$place->duree)}} ({{$place->duree}} jours) 
                                   @if($place->is_cancelled)) 
-                                   <p class ="text-danger text-center">(Demande annulée)
+                                   <p class ="text-danger text-center">(Cette demande a pris fin)
                                    </p>
                                   @endif
                               </li><br>
