@@ -32,26 +32,18 @@ class User extends Authenticatable  implements CanResetPasswordContract
     ];
 
 
-
-
-
     // un User peut avoir plusieurs reservations
     public function reservations(){
         return $this->hasMany('\App\Reservation');
     }
 
 
-
-
      /**
-     * Les places actuelles de l'user
+     * La place actuelle de l'user
      *
      * @var $places
-     * @return array
+     * @return Place
      */
-
-
-//  A ADMIRER
 
      public function getCurrrentPlace(){
 
@@ -59,18 +51,9 @@ class User extends Authenticatable  implements CanResetPasswordContract
 
       }
 
+    public function   MyHistoric(){
 
-
-      /* {
-                // calcul de la date de fin de reservation de la place
-                $finishdate = strtotime($place->date_debut . '+'.$place->duree." days");
-                // si le timestamps actuel est inferieur a celui de la date de fin
-                if(time() < $finishdate){
-                    $this->current_place[]=$place;}
-            }
-
-        return $this->current_place;
-
-    }*/
+      return $this->reservations()->get();
+    }
 
 }

@@ -25,6 +25,7 @@ class UserController extends Controller
         setlocale(LC_TIME, 'fr_FR');
         $this->middleware('auth');
         $this->middleware('user_safe');
+        $this->middleware('check_free_place');
     }
 
 
@@ -43,6 +44,7 @@ class UserController extends Controller
         $current_place=$user->getCurrrentPlace();
 
 
+
         // ce serait interessant de lancer un evenement a chaque fois que la page est raffraichie pour les user en attente
         return view('index',compact('AlreadyRequested','current_place'));
     }
@@ -57,7 +59,7 @@ class UserController extends Controller
     {
        // On recupere les places que l'utilisateur possede en ce moment
       $current_place=$user->getCurrrentPlace();
-      $all_places= Reservation::MyHistoric();
+      $all_places= $user->MyHistoric();
 
 
 
@@ -137,7 +139,8 @@ class UserController extends Controller
         //il n'a pas de place
         else{
             // on cherche une place dispo de maniere aleatoire
-            $place=Place::where('dispo',1)->orderByRaw("RAND()")->first();
+            $place=Place::FreePlace()->first();
+
           //$place=Place::FreePlaces();
              // On regarde si il a deja fait une demande
             if(!empty($AlreadyRequested)){
@@ -158,9 +161,10 @@ class UserController extends Controller
                 //on attache a l'user la place  dans la table reservations
                 $user->reservations()->create(['place_id'=>$place->id]);
                 // on recupe cette nouvelle place
-                $newplace=$user->reservations()->where('place_id', $place->id)->orderBy('date_debut','desc')->first();
-                $current_place=$newplace;
-                $request_response['msg']="la place n° : ".$newplace->place_id." vous a été attribué "."pour une durée de ".$newplace->duree." jours (plus de détails dans l'onglet => \"Voir mes places\" ";
+                $current_place=$user->reservations()->where('place_id', $place->id)->orderBy('date_debut','desc')->first();
+                
+                $request_response['msg']="la place n° : ".$current_place->place_id." vous a été attribué "."jussqu'au "
+                .dates_to_french($current_place->date_fin);
                 $request_response['status']='success';
             }
         }
@@ -176,15 +180,9 @@ class UserController extends Controller
    public function delete_place(Place $place) {
      //suppression logique dans la table reservation
     $user=Auth::user();
-  //  dump($user->id);
-    //dd($place->id);
 
     // quand on delete une place on set la date de fin a aujourd'hui
     $user->reservations()->where('place_id',$place->id)->update(['date_fin'=>now()]);
-
-    // set dispo de la place
-    $place->dispo=1;
-    $place->save();
 
     // response
     $request_response['msg']='Vous venez de supprimer votre reservation !' ;

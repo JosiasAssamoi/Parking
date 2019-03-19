@@ -19,10 +19,5 @@ class Reservation extends Model
         return $this->belongsTo('\App\Place');
     }
 
-    // to do les places actuelles
-    public function scopeMyHistoric(){
-
-      return $this->get();
-    }
-
+  
 }
