@@ -163,7 +163,7 @@ class UserController extends Controller
                 // on recupe cette nouvelle place
                 $current_place=$user->reservations()->where('place_id', $place->id)->orderBy('date_debut','desc')->first();
                 
-                $request_response['msg']="la place n° : ".$current_place->place_id." vous a été attribué "."jussqu'au "
+                $request_response['msg']="la place n° : ".$current_place->place_id." vous a été attribué "."jusqu'au "
                 .dates_to_french($current_place->date_fin);
                 $request_response['status']='success';
             }
