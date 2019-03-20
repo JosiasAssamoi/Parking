@@ -76,7 +76,7 @@ class LoginController extends Controller
                 return $this->sendFailedLoginResponse($request, 'auth.tovalid');
             }
             if($user->rules==='admin')
-                $this->redirectTo=route('admin-home');
+                $this->redirectTo=route('admin.index');
         }
 
 

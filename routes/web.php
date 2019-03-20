@@ -30,11 +30,15 @@ Route::delete('place/{place}/place-request', 'UserController@delete_place')->nam
 Route::get('user/{user}/change-pass', 'UserController@change_pass_create')->name('change-pass');
 Route::post('user/{user}/change-pass', 'UserController@change_pass')->name('change-pass');
 
+//Place routes => il faudra creer des ressources
+Route::resource('place','PlaceController');
 
-
-//Admin routes => il faudra creer des ressources
-Route::get('/admin/home', 'AdminController@index')->name('admin-home');
-
+//Admin routes 
+Route::get('admin','AdminController@admin_index')->name('admin.index');
+Route::get('admin/edit-register-requests','AdminController@edit_register_requests')->name('admin.edit-register-requests');
+Route::get('admin/edit-queue','AdminController@edit_queue')->name('admin.edit-queue');
+Route::get('admin/edit-users','AdminController@edit_users')->name('admin.edit-users');
+Route::get('admin/show-res','AdminController@show_res')->name('admin.show-res');
 
 
 
