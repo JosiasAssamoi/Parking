@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use View;
+use App\User;
+
 
 class AdminController extends Controller
 {
@@ -25,15 +28,17 @@ class AdminController extends Controller
      */
     public function admin_index()
     {
-       //Pour les policies 
-      //  $this->authorize('admin_index',Auth::user()); 
+       //Pour les policies
+    //  $this->authorize('admin_index',Auth::user());
 
         return view('/admin/home');
     }
 
       public function edit_register_requests()
     {
-        return 'a faire toutes les demandes d\'inscriptions' ;
+       $users=User::where('tovalid',1)->get();
+        //On peut utiliser la facade view pour renvoyer une vue
+        return View::make('admin/register_requests',compact('users'));
     }
 
       public function edit_queue()

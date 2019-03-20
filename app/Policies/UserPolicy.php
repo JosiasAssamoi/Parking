@@ -24,5 +24,5 @@ class UserPolicy
     {
         return $user->rules=="admin";
     }
-  
+
 }
