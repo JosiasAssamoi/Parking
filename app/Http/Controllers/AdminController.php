@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use View;
 use App\User;
+use Session;
 
 
 class AdminController extends Controller
@@ -34,8 +35,15 @@ class AdminController extends Controller
         return view('/admin/home');
     }
 
-      public function edit_register_requests()
+      public function edit_register_requests(User $user=null)
     {
+
+        if(!empty($user))
+        {
+            $user->tovalid=0;
+            $user->save();
+            Session::Flash('success','L\'Utilisateur '.$user->name.' a bien été validé');
+        }
        $users=User::where('tovalid',1)->get();
         //On peut utiliser la facade view pour renvoyer une vue
         return View::make('admin/register_requests',compact('users'));

@@ -20,7 +20,7 @@ class CheckFreePlace
     {
         // si l'user a un rang (donc en file d'attente)  && et que ce rang est le minimum trouve de la Bdd
         if(isset($request->user()->rang) && !empty($request->user()->rang) && User::min('rang')==$request->user()->rang){
-       // dd($request->user()->rang);
+       zdd($request->user()->rang);
             // on check si il y a une place dispo pour lui
             if($place = $this->place_available()){
                 // on lui attribue la place
