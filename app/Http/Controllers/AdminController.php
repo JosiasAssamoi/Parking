@@ -7,6 +7,7 @@ use Auth;
 use View;
 use App\User;
 use Session;
+use Illuminate\Support\Facades\Input;
 
 
 class AdminController extends Controller
@@ -37,21 +38,24 @@ class AdminController extends Controller
 
       public function edit_register_requests(User $user=null)
     {
-
-        if(!empty($user))
-        {
+        if(!empty($user)){
             $user->tovalid=0;
             $user->save();
             Session::Flash('success','L\'Utilisateur '.$user->name.' a bien été validé');
         }
+
        $users=User::where('tovalid',1)->get();
+
         //On peut utiliser la facade view pour renvoyer une vue
         return View::make('admin/register_requests',compact('users'));
     }
 
-      public function edit_queue()
+
+      public function edit_queue(Request $request)
     {
-        return 'edition de la liste dattente' ;
+       // dd(Input::all());
+        $users=User::whereNotNull('rang')->get();
+        return view('/admin/edit-queue',compact('users'));
     }
 
      public function edit_users()
