@@ -38,7 +38,7 @@ Route::get('admin','AdminController@admin_index')->name('admin.index');
 Route::get('admin/edit-register-requests','AdminController@edit_register_requests')->name('admin.edit-register-requests');
 Route::patch('admin/edit-register-requests/{user}','AdminController@edit_register_requests')->name('admin.valid-register-requests');
 Route::get('admin/edit-queue','AdminController@edit_queue')->name('admin.edit-queue');
-Route::patch('admin/edit-queueeee','AdminController@edit_queue')->name('admin.valid-queue');
+Route::patch('admin/valid-queue','AdminController@valid_queue')->name('admin.valid-queue');
 Route::get('admin/edit-users','AdminController@edit_users')->name('admin.edit-users');
 Route::get('admin/show-res','AdminController@show_res')->name('admin.show-res');
 

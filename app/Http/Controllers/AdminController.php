@@ -30,33 +30,42 @@ class AdminController extends Controller
      */
     public function admin_index()
     {
-       //Pour les policies
-    //  $this->authorize('admin_index',Auth::user());
-
         return view('/admin/home');
     }
 
       public function edit_register_requests(User $user=null)
     {
+        // si on recoit un user en param c'est qu'un patch a ete effectué pour le valider
         if(!empty($user)){
-            $user->tovalid=0;
-            $user->save();
-            Session::Flash('success','L\'Utilisateur '.$user->name.' a bien été validé');
+            $user->valid();
+            Session::Flash('success','L\'utilisateur '.$user->name." ".$user->firstname.' a bien été validé !');
         }
-
+        // recuperation de tout les users a valider pour actualiser la vue
        $users=User::where('tovalid',1)->get();
 
-        //On peut utiliser la facade view pour renvoyer une vue
+        //On peut utiliser la facade View pour renvoyer une vue
         return View::make('admin/register_requests',compact('users'));
     }
 
 
-      public function edit_queue(Request $request)
+      public function edit_queue()
     {
-       // dd(Input::all());
         $users=User::whereNotNull('rang')->get();
         return view('/admin/edit-queue',compact('users'));
     }
+
+     public function valid_queue(Request $request)
+    {
+       //si le select choix_rang a ete modifié on update les rangs 
+       if($request->choix_rang){
+        User::UpdateRanks($request->choix_rang);
+        }
+
+        $users=User::whereNotNull('rang')->get();
+        return view('/admin/edit-queue',compact('users'));
+    }
+
+
 
      public function edit_users()
     {
@@ -64,6 +73,8 @@ class AdminController extends Controller
     }
       public function show_res()
     {
-        return 'historique des reservations' ;
+        $users=User::has('reservations')->get();
+       return view('/admin/show-res',compact('users'));
     }
+
 }

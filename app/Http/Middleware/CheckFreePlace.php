@@ -20,7 +20,6 @@ class CheckFreePlace
     {
         // si l'user a un rang (donc en file d'attente)  && et que ce rang est le minimum trouve de la Bdd
         if(isset($request->user()->rang) && !empty($request->user()->rang) && User::min('rang')==$request->user()->rang){
-       zdd($request->user()->rang);
             // on check si il y a une place dispo pour lui
             if($place = $this->place_available()){
                 // on lui attribue la place
@@ -28,8 +27,8 @@ class CheckFreePlace
                 $this->attach_place($place, $request->user());
                 // On recupere cette nouvelle place qui est donc la derniere de cette user
                 $newplace=$request->user()->reservations()->where('place_id', $place->id)->orderBy('date_debut','desc')->first();
-                $request_response['msg']="Bonne nouvelle ! La place n°".$newplace->place_id." s'etant libérée, elle vous a été attribuée "
-                .$newplace->date_fin ;
+                $request_response['msg']="Bonne nouvelle ! La place n°".$newplace->place_id." s'etant libérée, elle vous a été attribuée jusqu'au "
+                .dates_to_french($newplace->date_fin) ;
                 $request_response['status']='success';
                 Session::flash('request_response', $request_response);
                 //to do decrémentation du rang de  chaque autre user

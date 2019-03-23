@@ -17,10 +17,10 @@
                 <form action ="{{route('admin.valid-queue')}}" method=POST>
                     @csrf
                     {{method_field('PATCH')}}
-                    @forelse($users as $user)
+                    @forelse($users->sortBy('rang') as $user)
                             <li  class="list-group-item d-flex justify-content-between align-items-center ">
-                                <span><b>{{ucfirst($user->name)." ".$user->firstname}}</b> {{$user->rang}}</span>
-                                <select class="browser-default" name="choix_rang">
+                                <span><b>{{ucfirst($user->name)." ".$user->firstname}}</b></span>
+                                <select class="browser-default" name="choix_rang[{{$user->id}}]">
                                     @foreach($users as $rang)
                                             <option selected="{{$user->rang}} " disabled hidden >{{$user->rang}}</option>
                                             @if($rang->rang !=$user->rang)
@@ -28,7 +28,7 @@
                                             @endif
                                     @endforeach
                                 </select>
-                                <input type="hidden" name="user-id" value="{{$user->id}}">
+                               
                             </li><br>
                             <hr/>
                     @empty
