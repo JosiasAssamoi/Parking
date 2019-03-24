@@ -10,6 +10,10 @@ class Place extends Model
 	protected $fillable= ['dispo'];
 	public $timestamps = false;
 
+
+
+
+
 	 /**
     * les utilisateurs qui ont possedé cette place
     */

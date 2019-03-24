@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
-
+use App\Place;
 class PlaceController extends Controller
 {
 
@@ -22,7 +22,8 @@ class PlaceController extends Controller
      */
     public function index()
     {
-        return view('admin/place-index');
+        $places=Place::paginate(5);
+        return view('admin/place-index',compact('places'));
     }
 
     /**
@@ -32,7 +33,8 @@ class PlaceController extends Controller
      */
     public function create()
     {
-        //
+        Place::create(['dispo'=>'1']);
+        return back()->with('success','La place a bien été crée');
     }
 
     /**
@@ -65,7 +67,6 @@ class PlaceController extends Controller
      */
     public function edit($id)
     {
-        //
     }
 
     /**
@@ -75,9 +76,13 @@ class PlaceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Place $place)
     {
-        //
+     
+        $place->dispo = !$place->dispo;
+        $place->save();
+
+        return back()->with('success','La place a bien eté modifiée');
     }
 
     /**

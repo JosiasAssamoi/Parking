@@ -16,7 +16,7 @@
                 @endif
                 @forelse($users as $user)
                  <li  class="list-group-item d-flexalign-items-center ">
-                    <li  class="list-group-item">{{$user->name}}
+                    <li  class="list-group-item">{{$user->name." ".$user->firstname}}
                     </li>
 
 

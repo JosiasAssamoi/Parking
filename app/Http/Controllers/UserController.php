@@ -38,7 +38,7 @@ class UserController extends Controller
     public function index()
     {
         $this->authorize('only_admin',Auth::user());
-        $users=User::where('tovalid',0)->get();
+        $users=User::where('tovalid',0)->where('rules','utilisateur')->get();
         return view('admin/edit-users',compact('users'));
     }
 
