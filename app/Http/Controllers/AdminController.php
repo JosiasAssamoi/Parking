@@ -77,4 +77,14 @@ class AdminController extends Controller
        return view('/admin/show-res',compact('users'));
     }
 
+     public function delete_user(User $user)
+    {
+        $this->authorize('only_admin',Auth::user());
+        // -1 = ko
+        $user->tovalid= -1 ; 
+        $user->save();
+
+        return back()->with('success','user supprimé');
+    }
+
 }

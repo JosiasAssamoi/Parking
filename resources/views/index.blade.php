@@ -12,6 +12,10 @@
                     <div class ="alert alert-{{$request_response['status']}} text-center">
                       {{$request_response['msg']}}
                     </div>
+                    @elseif(Session::has('warning'))
+                      <div class ="alert alert-warning text-center">
+                      {{Session::get('warning')}}
+                    </div>
 
                     @endif
                     <div class="wrapper text-center">
@@ -28,7 +32,8 @@
                       <p>Vous n'avez aucune demande de reservation en attente. </p>
 
                    @elseif(!isset($request_response))
-                      <p  class="alert alert-info" >Vous avez une demande en attente de validation et vous êtes au rang n° {{Auth::user()->rang}} </p>
+                      <p  class="alert alert-info" >Vous avez une demande en attente de validation et vous êtes au rang n° {{Auth::user()->rang}} 
+                      <a  href="{{route('user.cancel',Auth::user())}}" class="btn  btn-sm btn-secondary ml-2"  onclick="return confirm('Êtes-vous sûr de vouloir annuler cette demande reservation ? (Vous perdrez votre rang)');">Annuler</a> </p>
 
                    @endif
 

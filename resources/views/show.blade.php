@@ -37,14 +37,12 @@
                             @endif
                           @empty
                             <p>Vous n'avez aucune place.<br></p>
-                            <form action ="{{route('user.request',Auth::user())}}" method=POST >
-                            <div class="form-group-row">
-                             <span>Pour en reserver une</span>
-                              @csrf
-                              <input  type="submit" class="  btn btn-sm btn-outline-secondary ml-2"  onclick="return confirm('En validant cette demande une place vous sera attribué si nous en trouvons une de disponible, le cas échéant vous serez placé en liste d\'attente ');" value="Cliquer ici"/>
-                            </div>
-                             </form>
-
+                             @if(empty($AlreadyRequested) && empty($current_place))
+                             <form action ="{{route('user.request',Auth::user())}}" method=POST>
+                             @csrf
+                            <input type="submit" class="btn btn-outline-secondary my-1"  onclick="return confirm('En validant cette demande une place vous sera attribué si nous en trouvons une de disponible, le cas échéant vous serez placé en liste d\'attente ');" value="Reserver une place"/>
+                            </form>
+                            @endif
 
 
                           @endforelse

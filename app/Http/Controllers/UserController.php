@@ -37,6 +37,14 @@ class UserController extends Controller
 
     public function index()
     {
+        $this->authorize('only_admin',Auth::user());
+        $users=User::where('tovalid',0)->get();
+        return view('admin/edit-users',compact('users'));
+    }
+
+
+    public function home()
+    {
         // renvoi la valeur du rang de l'user actif
         $user= Auth::user();
         $AlreadyRequested=$user->rang;
@@ -50,6 +58,7 @@ class UserController extends Controller
     }
 
 
+
     /**
      * Display a resource.
      *
@@ -60,10 +69,11 @@ class UserController extends Controller
        // On recupere les places que l'utilisateur possede en ce moment
       $current_place=$user->getCurrrentPlace();
       $all_places= $user->MyHistoric();
+      $AlreadyRequested=$user->rang;
 
 
 
-      return view('show',compact('user','current_place','all_places'));
+      return view('show',compact('user','AlreadyRequested','current_place','all_places'));
     }
 
 
@@ -192,5 +202,15 @@ class UserController extends Controller
 
   //  return response()->view('index',compact('user','request_response'))->header("Refresh",'5;url=/user');
     return view('index',compact('user','request_response'));
+    }
+
+
+    public function booking_cancel(User $user){
+
+        $user->leave_request();
+
+        return back()->with('warning','Votre demande de place a bien été annulée, vous avez perdu votre rang');
+
+     
     }
 }

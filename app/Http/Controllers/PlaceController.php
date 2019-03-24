@@ -3,9 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
 
 class PlaceController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth'); 
+        $this->middleware('is_admin');  
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +22,7 @@ class PlaceController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin/place-index');
     }
 
     /**

@@ -20,9 +20,11 @@ class UserPolicy
         //
     }
 
-    public function admin_index(User $user)
-    {
-        return $user->rules=="admin";
+    public function only_admin(User $user)
+    {   
+    
+       return $user->isAdmin();
+
     }
 
 }

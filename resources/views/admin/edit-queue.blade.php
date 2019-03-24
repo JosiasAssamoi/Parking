@@ -34,7 +34,9 @@
                     @empty
                     Il n'y a aucun utilisateur dans la liste d'attente
                     @endforelse
+                    @isset($user)
                     <input  type="submit" class="btn  btn-sm btn-outline-info"  value="Modifier"/>
+                    @endisset
                 </form>
               </ul>
               </div>

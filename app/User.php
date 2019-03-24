@@ -39,6 +39,18 @@ class User extends Authenticatable  implements CanResetPasswordContract
     }
 
 
+    public function isAdmin(){
+
+         return $this->rules=="admin";
+    }
+
+    public function leave_request(){
+        //les users qui ont un rang superieur a l'utilisateur qui annule
+        User::where('rang','>',$this->rang)->decrement('rang');
+        $this->rang=null;
+        $this->save();
+    }
+
      /**
      * La place actuelle de l'user
      *
@@ -72,20 +84,22 @@ class User extends Authenticatable  implements CanResetPasswordContract
 
     public static function UpdateRanks( $choix_rang){
         foreach ($choix_rang as $id => $new_rang) {
-            $user=User::where('id',$id)->first(); 
+            $user=User::where('id',$id)->first();
+            //ca veut dire que l'user perd en rang et on decremente les autres users qui sont entre le rang de l'utilisateur et son nouveau rang
+            if($new_rang > $user->rang)
             self::decrement_users($user->rang, $new_rang);
-            self::increment_users($user->rang, $new_rang);
+            else self::increment_users($user->rang, $new_rang);
             $user->rang=$new_rang; 
             $user->save(); 
         }
     }
 
     private static function decrement_users($user_rang, $new_rang){
-        User::where('rang','<',$user_rang)->where('rang','>=',$new_rang)->increment('rang');
+        User::where('rang','>',$user_rang)->where('rang','<=',$new_rang)->decrement('rang');
     }
 
     private static function increment_users($user_rang, $new_rang){
-        User::where('rang','>',$user_rang)->where('rang','<=',$new_rang)->increment('rang');
+        User::where('rang','<',$user_rang)->where('rang','>=',$new_rang)->increment('rang');
     }
 
 }
