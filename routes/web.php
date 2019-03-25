@@ -20,7 +20,7 @@ Auth::routes();
 
 
 
-//crée les ressources du user controller avec les fonctions liées 
+//crée les ressources du user controller avec les fonctions liées
 Route::resource('user','UserController');
 Route::get('/home','UserController@home')->name('user-home');
 // Si on fait un post sur la page principale c'est que l'on fait une demande de place
@@ -32,7 +32,7 @@ Route::get('user/{user}/booking-cancelled', 'UserController@booking_cancel')->na
 
 //Place routes => il faudra creer des ressources
 Route::resource('place','PlaceController');
-//Admin routes 
+//Admin routes
 Route::get('admin','AdminController@admin_index')->name('admin.index');
 Route::get('admin/edit-register-requests','AdminController@edit_register_requests')->name('admin.edit-register-requests');
 Route::patch('admin/edit-register-requests/{user}','AdminController@edit_register_requests')->name('admin.valid-register-requests');
@@ -40,6 +40,4 @@ Route::get('admin/edit-queue','AdminController@edit_queue')->name('admin.edit-qu
 Route::patch('admin/valid-queue','AdminController@valid_queue')->name('admin.valid-queue');
 Route::get('admin/edit-users','AdminController@edit_users')->name('admin.edit-users');
 Route::get('admin/show-res','AdminController@show_res')->name('admin.show-res');
-
-
-
+Route::post('admin/{user}/place-assignement','AdminController@assign_place')->name('admin.place-assignement');

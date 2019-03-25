@@ -38,8 +38,9 @@ class UserController extends Controller
     public function index()
     {
         $this->authorize('only_admin',Auth::user());
+        $places=Place::FreePlace();
         $users=User::where('tovalid',0)->where('rules','utilisateur')->get();
-        return view('admin/edit-users',compact('users'));
+        return view('admin/edit-users',compact('users','places'));
     }
 
 
@@ -196,7 +197,7 @@ class UserController extends Controller
     if($user->isAdmin())
     {
       $user=User::where('id',$place->user())->first();
-  
+
       $user->reservations()->where('place_id',$place->id)->update(['date_fin'=>now()]);
       return back()->with('success','reservation supprimée');
     }

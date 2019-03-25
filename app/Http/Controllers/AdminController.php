@@ -56,7 +56,7 @@ class AdminController extends Controller
 
      public function valid_queue(Request $request)
     {
-       //si le select choix_rang a ete modifié on update les rangs 
+       //si le select choix_rang a ete modifié on update les rangs
        if($request->choix_rang){
         User::UpdateRanks($request->choix_rang);
         }
@@ -81,10 +81,18 @@ class AdminController extends Controller
     {
         $this->authorize('only_admin',Auth::user());
         // -1 = ko
-        $user->tovalid= -1 ; 
+        $user->tovalid= -1 ;
         $user->save();
 
         return back()->with('success','user supprimé');
+    }
+
+    public function assign_place(Request $request,User $user){
+
+        $user->reservations()->create(['place_id'=>$request->choix_place]);
+        return back()->with('success','la place a bien été attribuée');
+
+
     }
 
 }

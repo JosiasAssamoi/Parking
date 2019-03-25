@@ -17,7 +17,7 @@
                 @endif
                 @forelse($users as $user)
                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                  
+
                     {{$user->name." ".$user->firstname}}
                         @if (!empty($user->getCurrrentPlace()))
                         <form action ="{{route('user.delete.place',$user->getCurrrentPlace()->place_id)}}" method=POST>
@@ -27,9 +27,23 @@
 
 
                 </form>
+                @else
+                Attribuer une place
+                <form action ="{{route('admin.place-assignement',$user)}}"  method = POST>
+                  @csrf
+                      <select class="browser-default" name="choix_place">
+                        <option selected="" disabled hidden ></option>
+                            @foreach($places as $place)
+                              <option value="{{$place->id}}" >{{$place->id}}</option>
+                            @endforeach
+                      </select>
+                </select>
+                <input type ="submit" class="btn btn-sm btn-secondary" onclick ="return confirm ('Êtes-vous sûr de vouloir attribuer cette place ?');" value="Attribuer"/>
+              </form>
                 @endif
 
                     </li>
+
 
 
                 <hr/>
