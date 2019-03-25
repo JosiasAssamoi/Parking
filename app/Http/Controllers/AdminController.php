@@ -90,6 +90,7 @@ class AdminController extends Controller
     public function assign_place(Request $request,User $user){
 
         $user->reservations()->create(['place_id'=>$request->choix_place]);
+        Place::decrements_ranks();
         return back()->with('success','la place a bien été attribuée');
 
 

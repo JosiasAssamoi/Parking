@@ -23,12 +23,12 @@
                         <form action ="{{route('user.delete.place',$user->getCurrrentPlace()->place_id)}}" method=POST>
                  @csrf
                  {{method_field('DELETE')}}
-                <input  type="submit" class="btn  btn-sm btn-secondary"  onclick="return confirm('Êtes-vous sûr de vouloir annuler cette reservation ?');" value="Annuler"/>
+                <input  type="submit" class="btn  btn-sm btn-danger"  onclick="return confirm('Êtes-vous sûr de vouloir annuler cette reservation ?');" value="Annuler"/>
 
 
                 </form>
                 @else
-                Attribuer une place
+
                 <form action ="{{route('admin.place-assignement',$user)}}"  method = POST>
                   @csrf
                       <select class="browser-default" name="choix_place">

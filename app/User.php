@@ -84,11 +84,19 @@ class User extends Authenticatable  implements CanResetPasswordContract
     }
 
     public static function UpdateRanks( $choix_rang){
+
+
         foreach ($choix_rang as $id => $new_rang) {
+
             $user=User::where('id',$id)->first();
+
+
+
             //ca veut dire que l'user perd en rang et on decremente les autres users qui sont entre le rang de l'utilisateur et son nouveau rang
-            if($new_rang > $user->rang)
+            if($new_rang > $user->rang || $new_rang==-1 )
             self::decrement_users($user->rang, $new_rang);
+            elseif($new_rang==-1)
+            self::cancelqueue($user);
             else self::increment_users($user->rang, $new_rang);
             $user->rang=$new_rang;
             $user->save();
@@ -96,6 +104,7 @@ class User extends Authenticatable  implements CanResetPasswordContract
     }
 
     private static function decrement_users($user_rang, $new_rang){
+
         User::where('rang','>',$user_rang)->where('rang','<=',$new_rang)->decrement('rang');
     }
 
@@ -103,50 +112,20 @@ class User extends Authenticatable  implements CanResetPasswordContract
         User::where('rang','<',$user_rang)->where('rang','>=',$new_rang)->increment('rang');
     }
 
+    // decrement tout les users quand une place est attribuée
+    public  static function decrements_all_ranks(){
 
-
-
-    public function check_free_place(){
-
-      if($place = $this->place_available()){
-          $this->attach_place($place, $this);
-          // On recupere cette nouvelle place qui est donc la derniere de cette user
-          $newplace=$this->reservations()->where('place_id', $place->id)->orderBy('date_debut','desc')->first();
-          $request_response['msg']="Bonne nouvelle ! La place n°".$newplace->place_id." s'etant libérée, elle vous a été attribuée jusqu'au "
-          .dates_to_french($newplace->date_fin) ;
-          $request_response['status']='success';
-          Session::flash('request_response', $request_response);
-          //to do decrémentation du rang de  chaque autre user
-          $this->decrements_ranks();
-      }
+        User::where('rang','>',1)->decrement('rang');
 
     }
 
+    private static function cancelqueue($user){
 
-        private function place_available(){
+        $user->rang=null;
+        $user->save();
+        User::where('rang','>',$user_rang)->decrement('rang');
+      }
 
-            // on cherche une place dispo de maniere aleatoire
-            return Place::FreePlace()->first();
-        }
 
-        private function attach_place($place, $user){
-
-            //on attache a l'user la place  dans la table reservations
-            $user->reservations()->create(['place_id'=>$place->id]);
-            //on enleve l'user du rang
-            $user->rang=null;
-            $user->save();
-        }
-
-        // decrement tout les users quand une place est attribuée
-        private function decrements_ranks(){
-
-            foreach (User::whereNotNull('rang')->get() as $user ) {
-                if($user->rang!=1){
-                    $user->rang= $user->rang-1 ;
-                    $user->save();
-                }
-            }
-        }
 
 }

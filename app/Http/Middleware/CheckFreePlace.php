@@ -19,9 +19,9 @@ class CheckFreePlace
     public function handle($request, Closure $next)
     {
 
-        // si l'user a un rang (donc en file d'attente)  && et que ce rang est le minimum trouve de la Bdd
-        if(isset($request->user()->rang) && !empty($request->user()->rang) && User::min('rang')==$request->user()->rang){
-          $request->user()->check_free_place();
+
+        if(User::min('rang')==$request->user()->rang){
+          Place::assign_free_place($request->user());
             }
               return $next($request);
     }

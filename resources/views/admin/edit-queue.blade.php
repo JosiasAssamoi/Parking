@@ -18,17 +18,21 @@
                     @csrf
                     {{method_field('PATCH')}}
                     @forelse($users->sortBy('rang') as $user)
+
                             <li  class="list-group-item d-flex justify-content-between align-items-center ">
                                 <span><b>{{ucfirst($user->name)." ".$user->firstname}}</b></span>
                                 <select class="browser-default" name="choix_rang[{{$user->id}}]">
                                     @foreach($users as $rang)
                                             <option selected="{{$user->rang}} " disabled hidden >{{$user->rang}}</option>
+                                            @if($loop->first)
+                                                <option value="-1" >Supprimer de la liste</option>
+                                            @endif
                                             @if($rang->rang !=$user->rang)
                                                     <option value="{{$rang->rang}}" >{{$rang->rang}}</option>
                                             @endif
                                     @endforeach
                                 </select>
-                               
+
                             </li><br>
                             <hr/>
                     @empty
