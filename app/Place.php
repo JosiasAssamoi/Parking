@@ -23,6 +23,13 @@ class Place extends Model
         return $this->hasMany('\App\Reservation');
     }
 
+		// retourne l'utilisateur sur la  place
+		public function user(){
+
+			$user=$this->reservations()->where('date_fin','>',now())->first() ;
+			return $user->user_id;
+		}
+
  	/**
     * Recupere une place libre dans la base donc qui n'a jamais eu de reservations ou qui n'en a aucune en cours
     */

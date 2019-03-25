@@ -189,16 +189,26 @@ class UserController extends Controller
 
    public function delete_place(Place $place) {
      //suppression logique dans la table reservation
+
+
     $user=Auth::user();
 
+    if($user->isAdmin())
+    {
+      $user=User::where('id',$place->user())->first();
+  
+      $user->reservations()->where('place_id',$place->id)->update(['date_fin'=>now()]);
+      return back()->with('success','reservation supprimée');
+    }
+    else{
     // quand on delete une place on set la date de fin a aujourd'hui
     $user->reservations()->where('place_id',$place->id)->update(['date_fin'=>now()]);
-
     // response
     $request_response['msg']='Vous venez de supprimer votre reservation !' ;
     $request_response['status']='success';
+    }
 
-    $user=Auth::user();
+
 
   //  return response()->view('index',compact('user','request_response'))->header("Refresh",'5;url=/user');
     return view('index',compact('user','request_response'));

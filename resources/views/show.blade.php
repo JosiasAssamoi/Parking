@@ -6,14 +6,13 @@
         <div class="col-md-9">
             <div class="card">
                 <div class="card-header text-center">Historique des places</div>
-
                   <div class="card-body">
                       <div class="wrapper">
                           @if($user->reservations)
                             <ul class="list-group text-center ">
                           @endif
                           @isset($current_place)
-
+                          
                                   <li  class="list-group-item d-flex justify-content-between align-items-center bg-info">
                                     Place n° {{$current_place->place_id}} du  {{dates_to_french($current_place->date_debut)}} au {{dates_to_french($current_place->date_fin)}} (Vous possedez actuellement cette place)
                                     <form action ="{{route('user.delete.place',$current_place->place_id)}}" method=POST>
