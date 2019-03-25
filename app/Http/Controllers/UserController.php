@@ -25,7 +25,7 @@ class UserController extends Controller
         setlocale(LC_TIME, 'fr_FR');
         $this->middleware('auth');
         $this->middleware('user_safe');
-        $this->middleware('check_free_place');
+        $this->middleware('check_free_place')->except(['index']);
     }
 
 
@@ -172,7 +172,7 @@ class UserController extends Controller
                 $user->reservations()->create(['place_id'=>$place->id]);
                 // on recupe cette nouvelle place
                 $current_place=$user->reservations()->where('place_id', $place->id)->orderBy('date_debut','desc')->first();
-                
+
                 $request_response['msg']="la place n° : ".$current_place->place_id." vous a été attribué "."jusqu'au "
                 .dates_to_french($current_place->date_fin);
                 $request_response['status']='success';
@@ -211,6 +211,6 @@ class UserController extends Controller
 
         return back()->with('warning','Votre demande de place a bien été annulée, vous avez perdu votre rang');
 
-     
+
     }
 }
