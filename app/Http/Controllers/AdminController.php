@@ -7,6 +7,8 @@ use Auth;
 use View;
 use App\User;
 use Session;
+use Place;
+use Hash;
 use Illuminate\Support\Facades\Input;
 
 
@@ -67,10 +69,6 @@ class AdminController extends Controller
 
 
 
-     public function edit_users()
-    {
-        return 'edition des users' ;
-    }
       public function show_res()
     {
         $users=User::has('reservations')->get();
@@ -94,6 +92,12 @@ class AdminController extends Controller
         return back()->with('success','la place a bien été attribuée');
 
 
+    }
+
+    public function reset_pass(User $user){
+            $user->password= Hash::make('1234');
+            $user->save();
+            return back()->with('success','mot de passe de l\'utilisateur '.$user->name." ".$user->firstname.' a bien été réinitialisé');
     }
 
 }

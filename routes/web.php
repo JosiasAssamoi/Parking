@@ -41,3 +41,4 @@ Route::patch('admin/valid-queue','AdminController@valid_queue')->name('admin.val
 Route::get('admin/edit-users','AdminController@edit_users')->name('admin.edit-users');
 Route::get('admin/show-res','AdminController@show_res')->name('admin.show-res');
 Route::post('admin/{user}/place-assignement','AdminController@assign_place')->name('admin.place-assignement');
+Route::post('admin/reset-pass/user/{user}','AdminController@reset_pass')->name('admin.reset-pass');

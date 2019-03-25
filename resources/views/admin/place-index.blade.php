@@ -18,8 +18,8 @@
                  <form action= "{{route('place.update',$place->id)}}" method=POST >
                     @method('PUT')
                     @csrf
-                 <li  class="list-group-item d-flexalign-items-center ">
-                    <li  class="list-group-item"> Place n°{{ $place->id}}
+                 <li  class="list-group-item d-flex justify-content-between align-items-center">
+                <b> Place n°{{ $place->id}}</b>
                    
                     @if($place->dispo)
                     <input type ="submit" class ="  btn btn-sm btn-danger "value ="Rendre indispo"></input>

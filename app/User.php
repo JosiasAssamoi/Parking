@@ -89,15 +89,15 @@ class User extends Authenticatable  implements CanResetPasswordContract
         foreach ($choix_rang as $id => $new_rang) {
 
             $user=User::where('id',$id)->first();
-
-
-
             //ca veut dire que l'user perd en rang et on decremente les autres users qui sont entre le rang de l'utilisateur et son nouveau rang
-            if($new_rang > $user->rang || $new_rang==-1 )
-            self::decrement_users($user->rang, $new_rang);
-            elseif($new_rang==-1)
-            self::cancelqueue($user);
-            else self::increment_users($user->rang, $new_rang);
+            if($new_rang > $user->rang )
+                self::decrement_users($user->rang, $new_rang);
+            elseif($new_rang==-1){
+                self::cancel_queue($user);
+                continue;
+            }
+            else 
+                self::increment_users($user->rang, $new_rang);
             $user->rang=$new_rang;
             $user->save();
         }
@@ -119,11 +119,11 @@ class User extends Authenticatable  implements CanResetPasswordContract
 
     }
 
-    private static function cancelqueue($user){
-
+    private static function cancel_queue($user){
+       
+        User::where('rang','>',$user->rang)->decrement('rang');
         $user->rang=null;
         $user->save();
-        User::where('rang','>',$user_rang)->decrement('rang');
       }
 
 

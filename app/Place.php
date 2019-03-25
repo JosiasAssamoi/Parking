@@ -32,12 +32,12 @@ class Place extends Model
 		}
 
  	/**
-    * Recupere une place libre dans la base donc qui n'a jamais eu de reservations ou qui n'en a aucune en cours
+    * Recupere une place libre dans la base donc qui n'a pas de reservation en cours 
     */
 
 		public function scopeFreePlace(){
-			// first ne marche pas sur ce type de requete
-			return $this->doesntHave('reservations')->orWhereDoesntHave('reservations', function ($query){
+      
+			return $this->where('dispo',1)->WhereDoesntHave('reservations', function ($query){
 			$query->where('date_fin','>',now());
 			}
 		)->OrderByRaw('RAND()')->get();

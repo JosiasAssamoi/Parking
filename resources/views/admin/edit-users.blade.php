@@ -18,7 +18,14 @@
                 @forelse($users as $user)
                  <li class="list-group-item d-flex justify-content-between align-items-center">
 
+                   
+                    <form action ="{{route('admin.reset-pass',$user)}}" method=POST>
+                    @csrf
                     {{$user->name." ".$user->firstname}}
+                    <button  title= "re-initialiser le mot de passe" type="submit" class="btn btn-sm"  onclick="return confirm('Êtes-vous sûr de vouloir re-initialiser le mot de passe de cet utilisateur  ?');" >
+                    <i class="fas fa-key"></i>
+                    </button></form>
+                   
                         @if (!empty($user->getCurrrentPlace()))
                         <form action ="{{route('user.delete.place',$user->getCurrrentPlace()->place_id)}}" method=POST>
                  @csrf
@@ -41,6 +48,7 @@
                 <input type ="submit" class="btn btn-sm btn-secondary" onclick ="return confirm ('Êtes-vous sûr de vouloir attribuer cette place ?');" value="Attribuer"/>
               </form>
                 @endif
+              </span>
 
                     </li>
 
