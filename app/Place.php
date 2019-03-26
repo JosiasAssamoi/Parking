@@ -72,8 +72,7 @@ class Place extends Model
             //on attache a l'user la place  dans la table reservations
             $user->reservations()->create(['place_id'=>$place->id]);
             //on enleve l'user du rang
-            $user->rang=null;
-            $user->save();
+            $user->removesRank();
         }
 
 

@@ -28,6 +28,7 @@
                    
                         @if (!empty($user->getCurrrentPlace()))
                         <form action ="{{route('user.delete.place',$user->getCurrrentPlace()->place_id)}}" method=POST>
+                          <span>Possède la place n° {{$user->getCurrrentPlace()->id}}</span>
                  @csrf
                  {{method_field('DELETE')}}
                 <input  type="submit" class="btn  btn-sm btn-danger"  onclick="return confirm('Êtes-vous sûr de vouloir annuler cette reservation ?');" value="Annuler"/>

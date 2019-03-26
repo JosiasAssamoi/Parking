@@ -127,5 +127,12 @@ class User extends Authenticatable  implements CanResetPasswordContract
       }
 
 
+      public function removeRank(){
+
+        $this->rang=null;
+        $this->save();
+      }
+
+
 
 }
