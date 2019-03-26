@@ -88,9 +88,8 @@ class AdminController extends Controller
     public function assign_place(Request $request,User $user){
 
         $user->reservations()->create(['place_id'=>$request->choix_place]);
-        User::decrements_all_ranks();
         if(!empty($user->rang))
-            $user->leaveRank();
+            $user->leave_request();
       
 
         return back()->with('success','la place a bien été attribuée');

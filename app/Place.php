@@ -54,8 +54,7 @@ class Place extends Model
           .dates_to_french($newplace->date_fin);
           $request_response['status']='success';
           Session::flash('request_response', $request_response);
-          //to do decrémentation du rang de  chaque autre user
-          User::decrements_all_ranks();
+          $user->leave_request();
       }
 
     }

@@ -45,12 +45,6 @@ class User extends Authenticatable  implements CanResetPasswordContract
          return $this->rules=="admin";
     }
 
-    public function leave_request(){
-        //les users qui ont un rang superieur a l'utilisateur qui annule
-        User::where('rang','>',$this->rang)->decrement('rang');
-        $this->rang=null;
-        $this->save();
-    }
 
      /**
      * La place actuelle de l'user
@@ -91,47 +85,34 @@ class User extends Authenticatable  implements CanResetPasswordContract
             $user=User::where('id',$id)->first();
             //ca veut dire que l'user perd en rang et on decremente les autres users qui sont entre le rang de l'utilisateur et son nouveau rang
             if($new_rang > $user->rang )
-                self::decrement_users($user->rang, $new_rang);
+                $user->decrement_users($user->rang, $new_rang);
             elseif($new_rang==-1){
-                self::cancel_queue($user);
+                $user->leave_request();
                 continue;
             }
             else 
-                self::increment_users($user->rang, $new_rang);
+                $user->increment_users($user->rang, $new_rang);
             $user->rang=$new_rang;
             $user->save();
         }
     }
 
-    private static function decrement_users($user_rang, $new_rang){
+    private  function decrement_users($user_rang, $new_rang){
 
         User::where('rang','>',$user_rang)->where('rang','<=',$new_rang)->decrement('rang');
     }
 
-    private static function increment_users($user_rang, $new_rang){
+    private  function increment_users($user_rang, $new_rang){
         User::where('rang','<',$user_rang)->where('rang','>=',$new_rang)->increment('rang');
     }
 
-    // decrement tout les users quand une place est attribuée
-    public  static function decrements_all_ranks(){
 
-        User::where('rang','>',1)->decrement('rang');
-
-    }
-
-    private static function cancel_queue($user){
-       
-        User::where('rang','>',$user->rang)->decrement('rang');
-        $user->rang=null;
-        $user->save();
-      }
-
-
-      public function removeRank(){
-
+       public function leave_request(){
+        //les users qui ont un rang superieur a l'utilisateur qui quitte son rang
+        User::where('rang','>',$this->rang)->decrement('rang');
         $this->rang=null;
         $this->save();
-      }
+    }
 
 
 
