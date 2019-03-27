@@ -77,8 +77,13 @@ class User extends Authenticatable  implements CanResetPasswordContract
         $this->save();
     }
 
-    public static function UpdateRanks( $choix_rang){
+    
+     public function isInQueue(){
 
+        return !empty($this->rang); 
+    }
+
+    public static function UpdateRanks( $choix_rang){
 
         foreach ($choix_rang as $id => $new_rang) {
 
@@ -113,6 +118,40 @@ class User extends Authenticatable  implements CanResetPasswordContract
         $this->rang=null;
         $this->save();
     }
+
+    public  function assign_free_place(){
+        $place = Place::FreePlace()->first();
+        //si pas de place libre ou qu'il y a deja une liste d'attente
+         if( User::whereNotNull('rang')->first() && !$this->isInQueue() || empty($place) && !$this->isInQueue() ){
+              $this->putInQueue();
+              Session::flash('success','Votre demande a été soumise, vous serez informé lors de son traitement');
+            }
+        elseif(!empty($place)){
+          $this->attach_place($place);
+          // On recupere cette nouvelle place qui est donc la derniere de cette user
+          $newplace=$this->reservations()->where('place_id', $place->id)->orderBy('date_debut','desc')->first();
+          Session::flash('success', 'Bonne nouvelle ! La place n°'.$newplace->place_id.' vous a été attribuée');
+      }
+
+    }
+
+    public function putInQueue(){
+           $this->rang= empty(User::max('rang')) ? 1 : (User::max('rang')+1) ;
+            $this->save();
+    }
+
+
+
+      private  function attach_place($place){
+            $this->reservations()->create(['place_id'=>$place->id]);
+            //on enleve l'user du rang si il en a un
+            if($this->isInQueue())
+            $this->leave_request();
+
+        }
+
+   
+
 
 
 

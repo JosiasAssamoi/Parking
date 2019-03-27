@@ -75,8 +75,8 @@ class AdminController extends Controller
        return view('/admin/show-res',compact('users'));
     }
 
-     public function delete_user(User $user)
-    {
+     public function delete_user(User $user){
+      
         $this->authorize('only_admin',Auth::user());
         // -1 = ko
         $user->tovalid= -1 ;
@@ -90,17 +90,13 @@ class AdminController extends Controller
         $user->reservations()->create(['place_id'=>$request->choix_place]);
         if(!empty($user->rang))
             $user->leave_request();
-      
-
         return back()->with('success','la place a bien été attribuée');
-
-
     }
 
     public function reset_pass(User $user){
-            $user->password= Hash::make('1234');
-            $user->save();
-            return back()->with('success','mot de passe de l\'utilisateur '.$user->name." ".$user->firstname.' a bien été réinitialisé');
+      $user->password= Hash::make('1234');
+      $user->save();
+      return back()->with('success','mot de passe de l\'utilisateur '.$user->name." ".$user->firstname.' a bien été réinitialisé');
     }
 
 }

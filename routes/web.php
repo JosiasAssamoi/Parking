@@ -25,10 +25,10 @@ Route::resource('user','UserController');
 Route::get('/home','UserController@home')->name('user-home');
 // Si on fait un post sur la page principale c'est que l'on fait une demande de place
 Route::post('user/{user}/place-request', 'UserController@place_request')->name('user.request');
-Route::delete('place/{place}/place-request', 'UserController@delete_place')->name('user.delete.place');
+Route::delete('place/{place}/place-request', 'UserController@delete_booking')->name('user.delete.place');
 Route::get('user/{user}/change-pass', 'UserController@change_pass_create')->name('change-pass');
 Route::post('user/{user}/change-pass', 'UserController@change_pass')->name('change-pass');
-Route::get('user/{user}/booking-cancelled', 'UserController@booking_cancel')->name('user.cancel');
+Route::post('user/{user}/booking-cancelled', 'UserController@booking_cancel')->name('user.cancel');
 
 //Place routes => il faudra creer des ressources
 Route::resource('place','PlaceController');

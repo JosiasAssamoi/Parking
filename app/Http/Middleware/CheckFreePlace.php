@@ -21,7 +21,7 @@ class CheckFreePlace
 
 
         if($request->user()->rang==1){
-          Place::assign_free_place($request->user());
+          $request->user()->assign_free_place();
             }
               return $next($request);
     }

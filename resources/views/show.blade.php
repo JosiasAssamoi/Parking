@@ -36,13 +36,12 @@
                             @endif
                           @empty
                             <p>Vous n'avez aucune place.<br></p>
-                             @if(empty($AlreadyRequested) && empty($current_place))
+                            @can('request_booking',App\User::class)
                              <form action ="{{route('user.request',Auth::user())}}" method=POST>
                              @csrf
-                            <input type="submit" class="btn btn-outline-secondary my-1"  onclick="return confirm('En validant cette demande une place vous sera attribué si nous en trouvons une de disponible, le cas échéant vous serez placé en liste d\'attente ');" value="Reserver une place"/>
-                            </form>
-                            @endif
-
+                              <input type="submit" class="btn btn-outline-secondary my-1"  onclick="return confirm('En validant cette demande une place vous sera attribué si nous en trouvons une de disponible, le cas échéant vous serez placé en liste d\'attente ');" value="Reserver une place"/>
+                             </form>
+                          @endcan
 
                           @endforelse
                           @if($user->reservations)

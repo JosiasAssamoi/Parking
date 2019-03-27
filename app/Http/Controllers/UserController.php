@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Place;
 use App\Reservation;
+use Session;
 
 class UserController extends Controller
 {
@@ -46,6 +47,7 @@ class UserController extends Controller
 
     public function home()
     {
+
         // renvoi la valeur du rang de l'user actif
         $user= Auth::user();
         $AlreadyRequested=$user->rang;
@@ -116,7 +118,6 @@ class UserController extends Controller
 
 
    public function change_pass(User $user, ChangePasswordFormRequest $request) {
-
     //si le hash check ne match pas on return une erreur
     if (!(Hash::check($request->password, $user->password)))
     {
@@ -135,88 +136,37 @@ class UserController extends Controller
    }
 
 
-   // du gros pathé qui fonctionne mais a refactorer !!
    public function place_request(User $user){
-       $request_response=[];
-       $AlreadyRequested=$user->rang;
-       $current_place=$user->getCurrrentPlace();
 
-
-        //si il a deja une place en ce moment error
-        if(!empty($current_place)){
-            $request_response['msg']='Vous avez deja une place en ce moment attendez la fin de votre reservation avant de reiterer une demande' ;
-            $request_response['status']='danger';
-        }
-        //il n'a pas de place
-        else{
-            // on cherche une place dispo de maniere aleatoire
-            $place=Place::FreePlace()->first();
-
-          //$place=Place::FreePlaces();
-             // On regarde si il a deja fait une demande
-            if(!empty($AlreadyRequested)){
-                $request_response['msg']='Vous avez deja  effectuée une demande, elle sera traitée des qu\'une place se liberera' ;
-                $request_response['status']='danger';
-            }
-            // il n'a pas fait de demande
-            // si il y a deja une queue et que l'user n'y est pas encore il doit prendre la derniere place OU si il n' y a pas de place dispo
-            elseif( User::max('rang')!=null || empty($place) ){
-                 $user->rang= empty(User::max('rang')) ? 1 : (User::max('rang')+1) ;
-                 $user->save();
-                 $request_response['msg']="Votre demande a été soumise, vous serez informé lors de son traitement";
-                 $request_response['status']='success';
-                 $AlreadyRequested=$user->rang;
-            }
-            // il n'a pas de place && personne n'est avant lui && et il n'a pas deja une demande en attente  && une place est dispo
-            else{
-                //on attache a l'user la place  dans la table reservations
-                $user->reservations()->create(['place_id'=>$place->id]);
-                // on recupe cette nouvelle place
-                $current_place=$user->reservations()->where('place_id', $place->id)->orderBy('date_debut','desc')->first();
-
-                $request_response['msg']="la place n° : ".$current_place->place_id." vous a été attribué "."jusqu'au "
-                .dates_to_french($current_place->date_fin);
-                $request_response['status']='success';
-            }
-        }
-
+        $user->assign_free_place();    
         //  return response()->view('index',compact('user','request_response','AlreadyRequested'))->header("Refresh","5;url=/user");
-        return view('index',compact('user','request_response','AlreadyRequested','current_place'));
+        return back();
   }
 
 
 
 
 
-   public function delete_place(Place $place) {
+   public function delete_booking(Place $place) {
      //suppression logique dans la table reservation
-         $user=Auth::user();
+        $user=Auth::user();
         
         if($user->isAdmin())
         {
               $user=User::where('id',$place->user())->first();
               $user->reservations()->where('place_id',$place->id)->update(['date_fin'=>now()]);
-              return back()->with('success','reservation supprimée');
         }
-        else{
-            // quand on delete une place on set la date de fin a aujourd'hui
-            $user->reservations()->where('place_id',$place->id)->update(['date_fin'=>now()]);
-            // response
-            $request_response['msg']='Vous venez de supprimer votre reservation !' ;
-            $request_response['status']='success';
-        }
+        // quand on delete une place on set la date de fin a aujourd'hui
+        $user->reservations()->where('place_id',$place->id)->update(['date_fin'=>now()]);
 
-  //  return response()->view('index',compact('user','request_response'))->header("Refresh",'5;url=/user');
-    return view('index',compact('user','request_response'));
+
+         return back()->with('success','reservation supprimée');
     }
 
 
     public function booking_cancel(User $user){
 
         $user->leave_request();
-
         return back()->with('warning','Votre demande de place a bien été annulée, vous avez perdu votre rang');
-
-
     }
 }
