@@ -43,7 +43,7 @@ class LoginController extends Controller
 
 
    /**
-     * OVERRIDE pour gerer la validation par l'admin avec le champs tovalid 
+     * OVERRIDE pour gerer la validation par l'admin avec le champs tovalid
      * Handle a login request to the application  .
      *
      * @param  \Illuminate\Http\Request  $request
@@ -75,6 +75,8 @@ class LoginController extends Controller
             if ($user->tovalid === 1) {
                 return $this->sendFailedLoginResponse($request, 'auth.tovalid');
             }
+            elseif($user->tovalid === -1)
+                return $this->sendFailedLoginResponse($request, 'auth.failed');
             if($user->rules==='admin')
                 $this->redirectTo='/admin';
         }
@@ -95,7 +97,7 @@ class LoginController extends Controller
     }
 
       /**
-     * Ovveride pour custom the message 
+     * Ovveride pour custom the message
      * Get the failed login response instance.
      *
      * @param  \Illuminate\Http\Request  $request

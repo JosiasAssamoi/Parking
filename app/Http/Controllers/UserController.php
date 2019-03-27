@@ -25,8 +25,8 @@ class UserController extends Controller
     {
         setlocale(LC_TIME, 'fr_FR');
         $this->middleware('auth');
-        $this->middleware('user_safe');
-        $this->middleware('check_free_place')->except(['index']);
+        $this->middleware('user_safe')->except(['index','destroy']);
+        $this->middleware('check_free_place')->except(['index','destroy']);
     }
 
 
@@ -129,15 +129,15 @@ class UserController extends Controller
    public function place_request(User $user){
 
         if(empty($user->getCurrrentPlace())){
-        $place=$user->assign_free_place(); 
+        $place=$user->assign_free_place();
         if(empty($place))
-            Session::flash('warning','Votre demande de place n\'a pu aboutir, Veuillez re essayer ultérieurmeent'); 
+            Session::flash('warning','Votre demande de place n\'a pu aboutir, Veuillez re essayer ultérieurmeent');
         else
         Reservation::sendNewBookingResponse($place);
         }
 
-        
-            
+
+
         //  return response()->view('index',compact('user','request_response','AlreadyRequested'))->header("Refresh","5;url=/user");
         return back();
   }
@@ -148,7 +148,7 @@ class UserController extends Controller
    public function delete_booking(Place $place) {
      //suppression logique dans la table reservation
         $user=Auth::user();
-        
+
         if($user->isAdmin())
         {
               $user=User::where('id',$place->user())->first();
@@ -170,10 +170,14 @@ class UserController extends Controller
 
 
     public function destroy(User $user){
-      
+
         $this->authorize('only_admin',Auth::user());
+
         // -1 = ko
         $user->tovalid= -1 ;
+        $user->reservations()->delete();
+        if($user->isInQueue()){
+        $user->leave_request();}
         $user->save();
 
         return back()->with('success','user supprimé');

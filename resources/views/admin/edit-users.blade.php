@@ -26,7 +26,7 @@
                     <i class="fas fa-key"></i>
                     </button>
                   </form>
-                   <form action ="{{route('user.destroy',$user)}}" method=POST>
+                   <form action ="{{ route('user.destroy',['user'=> $user] ) }}" method=POST>
                     @csrf
                     @method('DELETE')
                     <button  title= "supprimer cet utilisateur" type="submit" class="btn btn-sm btn-danger"  onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur  ?');" >
@@ -34,7 +34,7 @@
                     </button>
                   </form>
                   </div>
-                   
+
                         @if (!empty($user->getCurrrentPlace()))
                         <form action ="{{route('user.delete.place',$user->getCurrrentPlace()->place_id)}}" method=POST>
                           <span>Possède la place n° {{$user->getCurrrentPlace()->place_id}}</span>
@@ -48,7 +48,7 @@
 
                 <form action ="{{route('admin.place-assignement',$user)}}"  method = POST>
                   @csrf
-                      <select class="browser-default" name="choix_place">
+                      <select required class="browser-default" name="choix_place">
                         <option selected="" disabled hidden ></option>
                             @foreach($places as $place)
                               <option value="{{$place->id}}" >{{$place->id}}</option>
