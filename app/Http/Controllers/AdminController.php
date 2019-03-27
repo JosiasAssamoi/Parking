@@ -86,7 +86,7 @@ class AdminController extends Controller
     }
 
     public function assign_place(Request $request,User $user){
-
+        //TO DO NOTIFIER L'UTILISATEUR
         $user->reservations()->create(['place_id'=>$request->choix_place]);
         if(!empty($user->rang))
             $user->leave_request();

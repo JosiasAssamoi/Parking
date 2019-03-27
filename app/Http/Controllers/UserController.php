@@ -47,17 +47,7 @@ class UserController extends Controller
 
     public function home()
     {
-
-        // renvoi la valeur du rang de l'user actif
-        $user= Auth::user();
-        $AlreadyRequested=$user->rang;
-        // places actuelles
-        $current_place=$user->getCurrrentPlace();
-
-
-
-        // ce serait interessant de lancer un evenement a chaque fois que la page est raffraichie pour les user en attente
-        return view('index',compact('AlreadyRequested','current_place'));
+        return view('index');
     }
 
 
@@ -72,11 +62,9 @@ class UserController extends Controller
        // On recupere les places que l'utilisateur possede en ce moment
       $current_place=$user->getCurrrentPlace();
       $all_places= $user->MyHistoric();
-      $AlreadyRequested=$user->rang;
 
 
-
-      return view('show',compact('user','AlreadyRequested','current_place','all_places'));
+      return view('show',compact('user','current_place','all_places'));
     }
 
 
@@ -138,7 +126,16 @@ class UserController extends Controller
 
    public function place_request(User $user){
 
-        $user->assign_free_place();    
+        if(empty($user->getCurrrentPlace())){
+        $place=$user->assign_free_place(); 
+        if(empty($place))
+            Session::flash('warning','Votre demande de place n\'a pu aboutir, Veuillez re essayer ultérieurmeent'); 
+        else
+        Reservation::sendNewBookingResponse($place);
+        }
+
+        
+            
         //  return response()->view('index',compact('user','request_response','AlreadyRequested'))->header("Refresh","5;url=/user");
         return back();
   }

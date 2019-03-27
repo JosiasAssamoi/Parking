@@ -128,11 +128,9 @@ class User extends Authenticatable  implements CanResetPasswordContract
             }
         elseif(!empty($place)){
           $this->attach_place($place);
-          // On recupere cette nouvelle place qui est donc la derniere de cette user
-          $newplace=$this->reservations()->where('place_id', $place->id)->orderBy('date_debut','desc')->first();
-          Session::flash('success', 'Bonne nouvelle ! La place n°'.$newplace->place_id.' vous a été attribuée');
-      }
+        }
 
+    return $place;
     }
 
     public function putInQueue(){
@@ -147,12 +145,9 @@ class User extends Authenticatable  implements CanResetPasswordContract
             //on enleve l'user du rang si il en a un
             if($this->isInQueue())
             $this->leave_request();
-
         }
 
-   
-
-
+     
 
 
 }
