@@ -35,6 +35,7 @@ class AdminController extends Controller
         return view('/admin/home');
     }
 
+    //TO DO REGISTER REQUEST CONTROLLER
       public function edit_register_requests(User $user=null)
     {
         // si on recoit un user en param c'est qu'un patch a ete effectué pour le valider
@@ -75,15 +76,7 @@ class AdminController extends Controller
        return view('/admin/show-res',compact('users'));
     }
 
-     public function delete_user(User $user){
-      
-        $this->authorize('only_admin',Auth::user());
-        // -1 = ko
-        $user->tovalid= -1 ;
-        $user->save();
-
-        return back()->with('success','user supprimé');
-    }
+  
 
     public function assign_place(Request $request,User $user){
         //TO DO NOTIFIER L'UTILISATEUR

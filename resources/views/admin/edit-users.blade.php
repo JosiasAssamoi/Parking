@@ -18,13 +18,22 @@
                 @forelse($users as $user)
                  <li class="list-group-item d-flex justify-content-between align-items-center">
 
-                   
+                    <div class="wrapper d-block">
                     <form action ="{{route('admin.reset-pass',$user)}}" method=POST>
                     @csrf
                     {{$user->name." ".$user->firstname}}
                     <button  title= "re-initialiser le mot de passe" type="submit" class="btn btn-sm"  onclick="return confirm('Êtes-vous sûr de vouloir re-initialiser le mot de passe de cet utilisateur  ?');" >
                     <i class="fas fa-key"></i>
-                    </button></form>
+                    </button>
+                  </form>
+                   <form action ="{{route('user.destroy',$user)}}" method=POST>
+                    @csrf
+                    @method('DELETE')
+                    <button  title= "supprimer cet utilisateur" type="submit" class="btn btn-sm btn-danger"  onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur  ?');" >
+                   <i class="fas fa-user-times"></i>
+                    </button>
+                  </form>
+                  </div>
                    
                         @if (!empty($user->getCurrrentPlace()))
                         <form action ="{{route('user.delete.place',$user->getCurrrentPlace()->place_id)}}" method=POST>

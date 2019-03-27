@@ -124,6 +124,8 @@ class UserController extends Controller
    }
 
 
+// TO DO BOOKING CONTROLER
+
    public function place_request(User $user){
 
         if(empty($user->getCurrrentPlace())){
@@ -139,7 +141,6 @@ class UserController extends Controller
         //  return response()->view('index',compact('user','request_response','AlreadyRequested'))->header("Refresh","5;url=/user");
         return back();
   }
-
 
 
 
@@ -166,4 +167,18 @@ class UserController extends Controller
         $user->leave_request();
         return back()->with('warning','Votre demande de place a bien été annulée, vous avez perdu votre rang');
     }
+
+
+    public function destroy(User $user){
+      
+        $this->authorize('only_admin',Auth::user());
+        // -1 = ko
+        $user->tovalid= -1 ;
+        $user->save();
+
+        return back()->with('success','user supprimé');
+    }
+
+
+
 }
