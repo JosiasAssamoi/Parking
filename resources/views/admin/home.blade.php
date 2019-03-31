@@ -18,11 +18,11 @@
 
 
 
-                   <a href="{{route('admin.edit-register-requests')}}"class="btn btn-outline-secondary my-1"role="button">Editer demandes d'inscriptions</a>
+                   <a href="{{route('registering.index')}}"class="btn btn-outline-secondary my-1"role="button">Editer demandes d'inscriptions</a>
                    <a href="{{ route('place.index') }}" class="btn btn-outline-secondary my-1" role="button">Editer les places</a>
                    <a href="{{ route('user.index') }}" class="btn btn-outline-secondary my-1" role="button">Editer les utilisateurs</a>
-                   <a href="{{ route('admin.edit-queue') }}" class="btn btn-outline-secondary my-1" role="button">Editer la liste d'attente </a>
-                   <a href="{{ route('admin.show-res') }}" class="btn btn-outline-secondary my-1" role="button">Voir historique des reservations </a>
+                   <a href="{{ route('queue.index') }}" class="btn btn-outline-secondary my-1" role="button">Editer la liste d'attente </a>
+                   <a href="{{ route('booking.index') }}" class="btn btn-outline-secondary my-1" role="button">Voir historique des reservations </a>
                    <hr/>
                </div>
                 </div>

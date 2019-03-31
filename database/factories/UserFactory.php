@@ -22,7 +22,7 @@ $factory->define(App\User::class, function (Faker $faker) {
         'city' => $faker->city,
         'postal_code' => $faker->postcode,
         'email_verified_at' => now(),
-        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+        'password' => '$2y$10$NhWYjzwvQZh369L4pdj5n.L6KDnDOek0RhcrQRwGu3dTG0WzOSoHC', // secret
         'remember_token' => str_random(10),
     ];
 });

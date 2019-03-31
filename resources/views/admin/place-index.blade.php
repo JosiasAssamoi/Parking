@@ -30,8 +30,12 @@
                      </li>
                  </form>
                     @if ($loop->last)
-                        <a role ="button" class ="mt-4  btn btn-info "href="{{route('place.create')}}">Creer une place</a>
+                         <form action= "{{route('place.store',$place->id)}}" method=POST >
+                        @csrf
+                        <input type ="submit" class ="  btn btn-info mt-2 "value ="Créer une place"></input>
+                        </form>
                         <br><div class="text-center">{{$places->render()}}</div>
+
                      @endif
                                      <hr/>
                 @empty

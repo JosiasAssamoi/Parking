@@ -27,6 +27,15 @@ class UserPolicy
 
     }
 
+
+    public function user_access(User $user)
+    {   
+  
+         return $user->id === Auth::id();
+     
+
+    }
+
     public function request_booking(User $user){
         $user->refresh();
 

@@ -18,7 +18,7 @@
                 @forelse($users as $user)
                  <li class="list-group-item d-flex justify-content-between align-items-center">
 
-                    <div class="wrapper d-block">
+                    <div class="d-flex justify-content-start mr-4">
                     <form action ="{{route('admin.reset-pass',$user)}}" method=POST>
                     @csrf
                     {{$user->name." ".$user->firstname}}
@@ -36,7 +36,7 @@
                   </div>
 
                         @if (!empty($user->getCurrrentPlace()))
-                        <form action ="{{route('user.delete.place',$user->getCurrrentPlace()->place_id)}}" method=POST>
+                        <form action ="{{route('booking.destroy',$user->getCurrrentPlace())}}" method=POST>
                           <span>Possède la place n° {{$user->getCurrrentPlace()->place_id}}</span>
                  @csrf
                  {{method_field('DELETE')}}

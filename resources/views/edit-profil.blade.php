@@ -103,7 +103,7 @@
                         </div>
                         <br>
                         <div class ="alert alert-secondary text-center ">
-                            Pour modifier votre mot de passe <em><a href="{{route('change-pass',['user'=> Auth::user()])}}">cliquez ici  </em></a>
+                            Pour modifier votre mot de passe <em><a href="{{route('userchangepass.edit',['user'=> Auth::user()])}}">cliquez ici  </em></a>
                         </div>
                     </form>
                 </div>

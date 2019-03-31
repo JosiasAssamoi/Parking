@@ -17,7 +17,7 @@
                 @forelse($users as $user)
                  <li  class="list-group-item d-flex justify-content-between align-items-center ">
                 <span><b>{{ucfirst($user->name)." ".$user->firstname}}</b> est en attente de validation</span>
-                <form action ="{{route('admin.valid-register-requests',$user)}}" method=POST>
+                <form action ="{{route('registering.update',$user)}}" method=POST>
                         @csrf
                         {{method_field('PATCH')}}
                         <input  type="submit" class="btn  btn-sm btn-outline-success"  value="Valider"/>

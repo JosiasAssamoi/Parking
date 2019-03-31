@@ -37,7 +37,7 @@
 
 
                    @can('request_booking',App\User::class)
-                     <form action ="{{route('user.request',Auth::user())}}" method=POST>
+                     <form action ="{{route('booking.store')}}" method=POST>
                         @csrf
                         <input type="submit" class="btn btn-outline-secondary my-1"  onclick="return confirm('En validant cette demande une place vous sera attribué si nous en trouvons une de disponible, le cas échéant vous serez placé en liste d\'attente ');" value="Reserver une place"/>
                       </form>

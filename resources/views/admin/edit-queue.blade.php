@@ -14,7 +14,7 @@
                      {{Session::get('success')}}
                 </div>
                 @endif
-                <form action ="{{route('admin.valid-queue')}}" method=POST>
+                <form action ="{{route('queue.update',['queue'=>1])}}" method=POST>
                     @csrf
                     {{method_field('PATCH')}}
                     @forelse($users->sortBy('rang') as $user)

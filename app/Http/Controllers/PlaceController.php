@@ -26,16 +26,6 @@ class PlaceController extends Controller
         return view('admin/place-index',compact('places'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        Place::create(['dispo'=>'1']);
-        return back()->with('success','La place a bien été crée');
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -43,31 +33,13 @@ class PlaceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        //
+       Place::create(['dispo'=>'1']);
+       return back()->with('success','La place a bien été crée');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-    }
 
     /**
      * Update the specified resource in storage.
@@ -85,14 +57,4 @@ class PlaceController extends Controller
         return back()->with('success','La place a bien eté modifiée');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

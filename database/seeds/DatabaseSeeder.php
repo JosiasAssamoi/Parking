@@ -15,19 +15,20 @@ class DatabaseSeeder extends Seeder
       // decommenter pour creer des users random
      // $this->call(UserSeeder::class);
 
-
-        DB::table('users')->insert([
-        'name' => "Assamoi",
-        'email' =>"test@gmail.com",
-        'firstname' => "Josias",
-        'adresse' => "11 rue de poirote",
-        'city' => "Poirote-ville",
-        'postal_code' => "93500",
-        'tovalid' => 0,
-        'email_verified_at' => now(),
-        'password' => '$2y$10$NhWYjzwvQZh369L4pdj5n.L6KDnDOek0RhcrQRwGu3dTG0WzOSoHC', // secret 123456
-        'remember_token' => str_random(10),
-        ]);
+        for($i=1 ; $i<=4;$i++){
+            DB::table('users')->insert([
+            'name' => "test".$i,
+            'email' =>$i."@gmail.com",
+            'firstname' => "firstname".$i,
+            'adresse' => $i." rue du test",
+            'city' => "Poirote-ville",
+            'postal_code' => "93500",
+            'tovalid' => rand(0,1),
+            'email_verified_at' => now(),
+            'password' => '$2y$10$NhWYjzwvQZh369L4pdj5n.L6KDnDOek0RhcrQRwGu3dTG0WzOSoHC', // secret 123456
+            'remember_token' => str_random(10),
+            ]);
+        }
         DB::table('users')->insert([
         'name' => "Admin",
         'email' =>"admin@admin.fr",

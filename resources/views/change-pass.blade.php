@@ -8,8 +8,9 @@
             <div class="card">
                 <div class="card-header text-center">{{ __('Modifier votre mot de passe') }}</div>
                 <div class="card-body ">
-                	<form method="POST" action="{{ route('change-pass',Auth::user()) }}">
+                	<form method="POST" action="{{ route('userchangepass.update',Auth::user()) }}">
                         @csrf
+                        @method('PATCH')
 
                         @if(Session::has('error'))
                             <div class ="alert alert-danger">
