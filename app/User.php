@@ -77,10 +77,10 @@ class User extends Authenticatable  implements CanResetPasswordContract
         $this->save();
     }
 
-    
+
      public function isInQueue(){
 
-        return !empty($this->rang); 
+        return !empty($this->rang);
     }
 
     public static function UpdateRanks( $choix_rang){
@@ -95,7 +95,7 @@ class User extends Authenticatable  implements CanResetPasswordContract
                 $user->leave_request();
                 continue;
             }
-            else 
+            else
                 $user->increment_users($user->rang, $new_rang);
             $user->rang=$new_rang;
             $user->save();
@@ -119,19 +119,35 @@ class User extends Authenticatable  implements CanResetPasswordContract
         $this->save();
     }
 
-    public  function assign_free_place(){
-        $place = Place::FreePlace()->first();
-        //si pas de place libre ou qu'il y a deja une liste d'attente
-         if( User::whereNotNull('rang')->first() && !$this->isInQueue() || empty($place) && !$this->isInQueue() ){
-              $this->putInQueue();
-              Session::flash('success','Votre demande a été soumise, vous serez informé lors de son traitement');
-            }
-        elseif(!empty($place)){
-          $this->attach_place($place);
-        }
+    /*
+       donne une place a toute les personnes disponible
+    */
 
-    return $place;
+    public  static function trigger_assign_place(){
+        $places = Place::FreePlace(); // places dispo
+        foreach ($places as $place){
+          //  dd($place);
+            if($user=User::whereNotNull('rang')->OrderByRaw('rang')->first()){
+            $user->attach_place($place);
+            //Reservation::sendNewBookingResponse($place);
+            }
+        }
     }
+
+    public  function assign_free_place(){
+      $place = Place::FreePlace()->first();
+      //si pas de place libre ou qu'il y a deja une liste d'attente
+       if( User::whereNotNull('rang')->first() && !$this->isInQueue() || empty($place) && !$this->isInQueue() ){
+            $this->putInQueue();
+            Session::flash('success','Votre demande a été soumise, vous serez informé lors de son traitement');
+          }
+      elseif(!empty($place)){
+        $this->attach_place($place);
+      }
+  return $place;
+  }
+
+
 
     public function putInQueue(){
            $this->rang= empty(User::max('rang')) ? 1 : (User::max('rang')+1) ;
@@ -147,7 +163,7 @@ class User extends Authenticatable  implements CanResetPasswordContract
             $this->leave_request();
         }
 
-     
+
 
 
 }

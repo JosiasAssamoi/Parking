@@ -35,10 +35,12 @@ class UserController extends Controller
 
     public function index()
     {
-        $this->authorize('only_admin',Auth::user());
+      if(Auth::user()->can('only_admin',Auth::user())){
         $places=Place::FreePlace();
         $users=User::where('tovalid',0)->where('rules','utilisateur')->get();
         return view('admin/edit-users',compact('users','places'));
+      }
+      return back();
     }
 
 
@@ -65,7 +67,7 @@ class UserController extends Controller
              // On recupere les places que l'utilisateur possede en ce moment
              $current_place=$user->getCurrrentPlace();
              $all_places= $user->MyHistoric();
-             return view('user-show',compact('user','current_place','all_places'));    
+             return view('user-show',compact('user','current_place','all_places'));
         }
         return back();
     }
@@ -78,7 +80,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(User $user)
-    {   
+    {
         if($user->can('user_access', $user)){
             return view('edit-profil');
         }

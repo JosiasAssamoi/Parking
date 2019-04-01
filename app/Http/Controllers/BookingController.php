@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Place;
 use App\Reservation;
-use Session ; 
+use Session ;
 use Auth ;
 
 
@@ -37,7 +37,7 @@ class BookingController extends Controller
     {
         $user=Auth::user();
         if(empty($user->getCurrrentPlace())){
-        $place=$user->assign_free_place();
+          $place=$user->assign_free_place();
         if(empty($place))
             Session::flash('warning','Votre demande de place n\'a pu aboutir, Veuillez re essayer ultérieurmeent');
         else
@@ -47,7 +47,7 @@ class BookingController extends Controller
         return back();
     }
 
-    
+
 
     /**
      * Update the specified resource in storage.

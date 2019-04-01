@@ -20,9 +20,9 @@ class CheckFreePlace
     {
 
 
-        if($request->user()->rang==1){
-          $request->user()->assign_free_place();
-            }
+        if($request->user()->rang){
+            User::trigger_assign_place();
+        }
               return $next($request);
     }
 
